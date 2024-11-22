@@ -14,22 +14,22 @@
 // clang-format on
 
 typedef struct {
-  u8 *memory;
-  u8 *ptr;
-  u64 capacity;
-  u64 usedCapacity;
+    u8* memory;
+    u8* ptr;
+    u64 capacity;
+    u64 usedCapacity;
 } Arena;
 
-Arena *newArena(u64 size);
+Arena* newArena(u64 size);
 
-Arena *newArenaa(Arena *arena, u64 size);
+Arena* newArenaa(Arena* arena, u64 size);
 
-void *allocate(Arena *a, u64 size);
+void* allocate(Arena* a, u64 size);
 
-void *reallocate(Arena *a, void *ptr, u64 oldsize, u64 newsize);
+void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize);
 
-void clear(Arena *a);
+void clear(Arena* a);
 
-void freeArena(Arena *a);
+void freeArena(Arena* a);
 
 #endif // ARENA_H
