@@ -10,10 +10,10 @@ set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen")
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
 
-# exe
-# file(GLOB_RECURSE src ${SRC_DIR}/*.c ${SRC_DIR}/*.h ${GEN_DIR}/*.c ${GEN_DIR}/*.h)
-# add_executable(${PROJECT_NAME} ${src})
-# target_include_directories(${PROJECT_NAME} PUBLIC ${GEN_DIR} ${SRC_DIR})
+# lib
+file(GLOB_RECURSE src ${SRC_DIR}/*.c ${SRC_DIR}/*.h)
+add_library(${PROJECT_NAME} ${src})
+target_include_directories(${PROJECT_NAME} PUBLIC ${GEN_DIR} ${SRC_DIR})
 
 # google test
 include(FetchContent)
