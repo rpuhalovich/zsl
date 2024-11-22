@@ -1,0 +1,34 @@
+#ifndef RESULT_H
+#define RESULT_H
+
+%INCLUDE%
+
+#define SUCCESS 0
+#define ERROR_UNEXPECTED 1
+
+typedef int Error;
+
+%TEMPLATE_BEGIN%
+typedef struct {
+    %TYPE% result;
+    bool fail;
+    Error error;
+} Result_%TYPE%;
+
+Result_%TYPE% fail_%TYPE%(Error error)
+{
+    Result_%TYPE% failResult = {0};
+    failResult.error = error;
+    failResult.fail = true;
+    return failResult;
+}
+
+Result_%TYPE% success_%TYPE%(%TYPE% result)
+{
+    Result_%TYPE% successResult = {0};
+    successResult.result = result;
+    return successResult;
+}
+%TEMPLATE_END%
+
+#endif // RESULT_H

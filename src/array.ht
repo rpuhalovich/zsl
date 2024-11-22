@@ -1,0 +1,29 @@
+#ifndef ARRAY_H
+#define ARRAY_H
+
+#include "arena.h"
+#include "types.h"
+
+%INCLUDE%
+
+%TEMPLATE_BEGIN%
+typedef struct {
+    %TYPE%* items;
+    i32 length;
+    i32 capacity;
+} Array_%TYPENP%;
+
+Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
+
+Array_%TYPENP%* newArray_%TYPENP%c(Arena* arena, i32 capacity);
+
+%TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i);
+
+void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
+
+void aPop_%TYPENP%(Array_%TYPENP%* array);
+
+void freeArray_%TYPENP%(Array_%TYPENP%* a);
+%TEMPLATE_END%
+
+#endif // ARRAY_H
