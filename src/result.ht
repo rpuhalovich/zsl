@@ -1,6 +1,8 @@
 #ifndef RESULT_H
 #define RESULT_H
 
+#include "types.h"
+
 %INCLUDE%
 
 typedef enum {
@@ -9,7 +11,7 @@ typedef enum {
     ERROR_OUT_OF_BOUNDS
 } zError;
 
-typedef int Error;
+typedef i32 Error;
 
 %TEMPLATE_BEGIN%
 typedef struct {
