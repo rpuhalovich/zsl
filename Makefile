@@ -13,7 +13,7 @@ test: ninja
 	cmake --build build
 	./build/app_tests
 
-check: test
+check: clean test
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
 
