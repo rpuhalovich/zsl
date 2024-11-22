@@ -31,7 +31,7 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #endif
 
-#ifdef DEBUG
+#ifdef ZDEBUG
 #define LOG(...) printf(__VA_ARGS__)
 #define ASSERT(condition) assert(condition)
 #else
