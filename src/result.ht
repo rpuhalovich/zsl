@@ -9,7 +9,7 @@ typedef enum {
     SUCCESS = 0,
     ERROR_UNEXPECTED,
     ERROR_OUT_OF_BOUNDS
-} zError;
+} ErrorType;
 
 typedef i32 Error;
 
