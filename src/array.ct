@@ -18,8 +18,8 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
 Result_%TYPENP% aGetr_%TYPENP%(Array_%TYPENP%* array, i32 i)
 {
     if (i < 0 || i >= array->length)
-        return fail_i32(ERROR_OUT_OF_BOUNDS);
-    return success_i32(array->items[i]);
+        return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
+    return success_%TYPENP%(array->items[i]);
 }
 
 %TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i)
