@@ -3,6 +3,7 @@
 
 #include "arena.h"
 #include "types.h"
+#include "result.h"
 
 %INCLUDE%
 
@@ -15,15 +16,15 @@ typedef struct {
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
 
-Array_%TYPENP%* newArray_%TYPENP%c(Arena* arena, i32 capacity);
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity);
 
 %TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i);
+
+Result_%TYPENP% aGetr_%TYPENP%(Array_%TYPENP%* array, i32 i);
 
 void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 
 void aPop_%TYPENP%(Array_%TYPENP%* array);
-
-void freeArray_%TYPENP%(Array_%TYPENP%* a);
 %TEMPLATE_END%
 
 #endif // ARRAY_H

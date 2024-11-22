@@ -3,10 +3,10 @@
 %TEMPLATE_BEGIN%
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)
 {
-    return newArray_%TYPENP%c(arena, 16);
+    return newArrayc_%TYPENP%(arena, 16);
 }
 
-Array_%TYPENP%* newArray_%TYPENP%c(Arena* arena, i32 capacity)
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
 {
     Array_%TYPENP%* a = (Array_%TYPENP%*)allocate(arena, sizeof(Array_%TYPENP%));
     a->length = 0;
@@ -15,11 +15,19 @@ Array_%TYPENP%* newArray_%TYPENP%c(Arena* arena, i32 capacity)
     return a;
 }
 
-%TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i)
+Result_%TYPENP% aGetr_%TYPENP%(Array_%TYPENP%* array, i32 i)
 {
     if (i < 0 || i >= array->length)
-        exit(1);
-    return array->items[i];
+        return fail_i32(ERROR_OUT_OF_BOUNDS);
+    return success_i32(array->items[i]);
+}
+
+%TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i)
+{
+    Result_%TYPENP% item = aGetr_%TYPE%(array, i);
+    if (item.fail)
+        exit(item.error);
+    return item.result;
 }
 
 void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
@@ -29,7 +37,7 @@ void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
         array->items = (%TYPE%*)reallocate(arena, array->items, array->capacity, array->capacity * 2);
         array->capacity *= 2;
     }
-    array->items[array->length] = element;
+    array->items[array->length - 1] = element;
 }
 
 void aPop_%TYPENP%(Array_%TYPENP%* array)
@@ -37,10 +45,4 @@ void aPop_%TYPENP%(Array_%TYPENP%* array)
     array->length--;
     if (array->length < 0)
         array->length = 0;
-}
-
-void freeArray_%TYPENP%(Array_%TYPENP%* a)
-{
-    free(a->items);
-    free(a);
 }

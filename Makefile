@@ -21,9 +21,9 @@ release:
 
 test: ninja
 	cmake --build build
-	ctest --test-dir build --output-on-failure
+	./build/app_tests
 
-check: ninja
+check: test
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
 
