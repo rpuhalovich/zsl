@@ -3,19 +3,33 @@
 
 #include <assert.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define i16 int16_t
-#define i32 int32_t
-#define i64 long long
-#define u8 unsigned char
-#define u32 unsigned int
-#define u64 unsigned long long
 #define f32 float
 #define f64 double
+
+#if ((defined(_MSC_VER) || defined(__SYMBIAN32__)) && !defined(RGFW_STD_INT))
+typedef unsigned char u8;
+typedef signed char i8;
+typedef unsigned short u16;
+typedef signed short i16;
+typedef unsigned int u32;
+typedef signed int i32;
+typedef unsigned long u64;
+typedef signed long i64;
+#else
+#include <stdint.h>
+typedef uint8_t u8;
+typedef int8_t i8;
+typedef uint16_t u16;
+typedef int16_t i16;
+typedef uint32_t u32;
+typedef int32_t i32;
+typedef uint64_t u64;
+typedef int64_t i64;
+#endif
 
 #ifdef DEBUG
 #define LOG(...) printf(__VA_ARGS__)

@@ -30,7 +30,7 @@ Arena* newArenaa(Arena* arena, u64 size)
 
 void* allocate(Arena* a, u64 size)
 {
-    // ASSERT(a->ptr + size < a->ptr + a->capacity);
+    ASSERT(a->ptr + size < a->ptr + a->capacity);
 
     u8* ptr = a->ptr;
     a->ptr += size;
