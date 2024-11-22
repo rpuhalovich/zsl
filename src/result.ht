@@ -18,19 +18,19 @@ typedef struct {
     %TYPE% result;
     bool fail;
     Error error;
-} Result_%TYPE%;
+} Result_%TYPENP%;
 
-Result_%TYPE% fail_%TYPE%(Error error)
+Result_%TYPENP% fail_%TYPENP%(Error error)
 {
-    Result_%TYPE% failResult = {0};
+    Result_%TYPENP% failResult = {0};
     failResult.error = error;
     failResult.fail = true;
     return failResult;
 }
 
-Result_%TYPE% success_%TYPE%(%TYPE% result)
+Result_%TYPENP% success_%TYPENP%(%TYPE% result)
 {
-    Result_%TYPE% successResult = {0};
+    Result_%TYPENP% successResult = {0};
     successResult.result = result;
     return successResult;
 }
