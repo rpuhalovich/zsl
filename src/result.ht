@@ -9,7 +9,7 @@ typedef enum {
     SUCCESS = 0,
     ERROR_UNEXPECTED,
     ERROR_OUT_OF_BOUNDS
-} ErrorType;
+} ErrorTypeInternal;
 
 typedef i32 Error;
 
@@ -20,20 +20,9 @@ typedef struct {
     Error error;
 } Result_%TYPENP%;
 
-Result_%TYPENP% fail_%TYPENP%(Error error)
-{
-    Result_%TYPENP% failResult = {0};
-    failResult.error = error;
-    failResult.fail = true;
-    return failResult;
-}
+Result_%TYPENP% fail_%TYPENP%(Error error);
 
-Result_%TYPENP% success_%TYPENP%(%TYPE% result)
-{
-    Result_%TYPENP% successResult = {0};
-    successResult.result = result;
-    return successResult;
-}
+Result_%TYPENP% success_%TYPENP%(%TYPE% result);
 %TEMPLATE_END%
 
 #endif // RESULT_H

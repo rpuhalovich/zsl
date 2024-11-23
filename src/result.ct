@@ -1,0 +1,17 @@
+#include "result.h"
+
+%TEMPLATE_BEGIN%
+Result_%TYPENP% fail_%TYPENP%(Error error)
+{
+    Result_%TYPENP% failResult = {0};
+    failResult.error = error;
+    failResult.fail = true;
+    return failResult;
+}
+
+Result_%TYPENP% success_%TYPENP%(%TYPE% result)
+{
+    Result_%TYPENP% successResult = {0};
+    successResult.result = result;
+    return successResult;
+}

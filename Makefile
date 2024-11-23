@@ -3,6 +3,7 @@ ctemplate:
 	ctemplate ./src/types.ctypes ./src/array.ht ./gen/array.h
 	ctemplate ./src/types.ctypes ./src/array.ct ./gen/array.c
 	ctemplate ./src/types.ctypes ./src/result.ht ./gen/result.h
+	ctemplate ./src/types.ctypes ./src/result.ct ./gen/result.c
 
 ninja: ctemplate
 	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G Ninja
