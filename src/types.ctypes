@@ -1,4 +1,3 @@
 TYPE i32
 TYPE u32
-TYPE u64
 TYPE f32

@@ -10,7 +10,7 @@
 #define f32 float
 #define f64 double
 
-#if ((defined(_MSC_VER) || defined(__SYMBIAN32__)) && !defined(RGFW_STD_INT))
+#if defined(_MSC_VER) || defined(__SYMBIAN32__)
 typedef unsigned char u8;
 typedef signed char i8;
 typedef unsigned short u16;

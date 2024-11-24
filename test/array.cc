@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 
+extern "C" {
+#include "arena.h"
+#include "array.h"
 #include "types.h"
-#include "arena.c"
-#include "array.c"
+}
 
 TEST(Array, COMPOSITE_aPop_aGet_success) {
     Arena* arena = newArena(MEGABYTES(16));
