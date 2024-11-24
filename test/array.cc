@@ -6,7 +6,7 @@ extern "C" {
 #include "types.h"
 }
 
-TEST(Array, COMPOSITE_pop_getr_success) {
+TEST(Array, pop_getr_success) {
     Arena* arena = newArena(MEGABYTES(16));
 
     Array_i32* a = newArrayc_i32(arena, 1);
@@ -28,7 +28,7 @@ TEST(Array, COMPOSITE_pop_getr_success) {
     freeArena(arena);
 }
 
-TEST(Array, COMPOSITE_get_push_get_pop_get_success) {
+TEST(Array, get_push_get_pop_get_success) {
     Arena* arena = newArena(MEGABYTES(16));
 
     Array_i32* a = newArrayc_i32(arena, 1);
@@ -85,15 +85,18 @@ TEST(Array, get_out_of_bounds_fail) {
     freeArena(arena);
 }
 
-// TEST(Array, set_success) {
-//     Arena* arena = newArena(MEGABYTES(16));
-//
-//     Array_i32* a = newArrayc_i32(arena, 1);
-//     push_i32(arena, a, 1);
-//     push_i32(arena, a, 2);
-//     push_i32(arena, a, 3);
-//     EXPECT_EQ(3, a->length);
-//     EXPECT_EQ(4, a->capacity);
-//
-//     freeArena(arena);
-// }
+TEST(Array, set_success) {
+    Arena* arena = newArena(MEGABYTES(16));
+
+    Array_i32* a = newArrayc_i32(arena, 1);
+    push_i32(arena, a, 1);
+    push_i32(arena, a, 2);
+    push_i32(arena, a, 3);
+    EXPECT_EQ(3, a->length);
+    EXPECT_EQ(4, a->capacity);
+
+    set_i32(a, 1, 10);
+    EXPECT_EQ(10, get_i32(a, 1).result);
+
+    freeArena(arena);
+}
