@@ -27,6 +27,8 @@ Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 
 void pop_%TYPENP%(Array_%TYPENP%* array);
+
+void clear_%TYPENP%(Array_%TYPENP%* array);
 %TEMPLATE_END%
 
 #endif // ARRAY_H
