@@ -17,7 +17,6 @@ typedef struct {
     u8* memory;
     u8* ptr;
     u64 capacity;
-    u64 usedCapacity;
 } Arena;
 
 Arena* newArena(u64 size);

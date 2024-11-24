@@ -2,10 +2,10 @@
 
 Arena* newArena(u64 size)
 {
-    Arena* a = (Arena*)malloc(sizeof(Arena));
+    Arena* a = malloc(sizeof(Arena));
     memset(a, 0, sizeof(Arena));
 
-    a->memory = (u8*)malloc(size);
+    a->memory = malloc(size);
     memset(a->memory, 0, size);
 
     a->ptr = a->memory;
@@ -16,10 +16,10 @@ Arena* newArena(u64 size)
 
 Arena* newArenaa(Arena* arena, u64 size)
 {
-    Arena* a = (Arena*)allocate(arena, size);
+    Arena* a = allocate(arena, size);
     memset(a, 0, sizeof(Arena));
 
-    a->memory = (u8*)allocate(arena, size);
+    a->memory = allocate(arena, size);
     memset(a->memory, 0, size);
 
     a->ptr = a->memory;
@@ -34,7 +34,6 @@ void* allocate(Arena* a, u64 size)
 
     u8* ptr = a->ptr;
     a->ptr += size;
-    a->usedCapacity += size;
 
     return ptr;
 }
@@ -46,9 +45,6 @@ void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
     void* newptr = a->ptr;
     a->ptr += newsize;
     memcpy(newptr, ptr, oldsize);
-
-    a->usedCapacity -= oldsize;
-    a->usedCapacity += newsize;
 
     return newptr;
 }
@@ -63,5 +59,4 @@ void clear(Arena* a)
 {
     memset(a->memory, 0, a->capacity);
     a->ptr = a->memory;
-    a->usedCapacity = 0;
 }
