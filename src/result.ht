@@ -16,7 +16,6 @@ typedef i32 Error;
 %TEMPLATE_BEGIN%
 typedef struct {
     %TYPE% result;
-    bool fail;
     Error error;
 } Result_%TYPENP%;
 

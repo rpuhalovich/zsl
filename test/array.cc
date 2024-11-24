@@ -67,24 +67,20 @@ TEST(Array, get_out_of_bounds_fail) {
     EXPECT_EQ(8, a->capacity);
 
     Result_i32 i = get_i32(a, a->length);
-    EXPECT_EQ(true, i.fail);
-    EXPECT_EQ(0, i.result);
     EXPECT_EQ(ERROR_OUT_OF_BOUNDS, i.error);
+    EXPECT_EQ(0, i.result);
 
     i = get_i32(a, INT_MAX);
-    EXPECT_EQ(true, i.fail);
-    EXPECT_EQ(0, i.result);
     EXPECT_EQ(ERROR_OUT_OF_BOUNDS, i.error);
+    EXPECT_EQ(0, i.result);
 
     i = get_i32(a, INT_MIN);
-    EXPECT_EQ(true, i.fail);
-    EXPECT_EQ(0, i.result);
     EXPECT_EQ(ERROR_OUT_OF_BOUNDS, i.error);
+    EXPECT_EQ(0, i.result);
 
     i = get_i32(a, INT_MIN + 1);
-    EXPECT_EQ(true, i.fail);
-    EXPECT_EQ(0, i.result);
     EXPECT_EQ(ERROR_OUT_OF_BOUNDS, i.error);
+    EXPECT_EQ(0, i.result);
 
     freeArena(arena);
 }

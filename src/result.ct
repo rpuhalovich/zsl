@@ -5,7 +5,6 @@ Result_%TYPENP% fail_%TYPENP%(Error error)
 {
     Result_%TYPENP% failResult = {0};
     failResult.error = error;
-    failResult.fail = true;
     return failResult;
 }
 
