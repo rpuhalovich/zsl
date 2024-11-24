@@ -15,19 +15,19 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
     return a;
 }
 
-Result_%TYPENP% getr_%TYPENP%(Array_%TYPENP%* array, i32 i)
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, i32 i)
 {
     if (i < 0 || i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
     return success_%TYPENP%(array->items[i]);
 }
 
-%TYPE% get_%TYPENP%(Array_%TYPENP%* array, i32 i)
+Error set_%TYPENP%(Array_%TYPENP%* array, i32 i, %TYPE% val)
 {
-    Result_%TYPENP% item = getr_%TYPE%(array, i);
-    if (item.fail)
-        exit(item.error);
-    return item.result;
+    if (i < 0 || i >= array->length)
+        return ERROR_OUT_OF_BOUNDS;
+    array->items[i] = val;
+    return SUCCESS;
 }
 
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)

@@ -15,10 +15,15 @@ typedef struct {
 } Array_%TYPENP%;
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
+
 Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity);
-%TYPE% get_%TYPENP%(Array_%TYPENP%* array, i32 i);
-Result_%TYPENP% getr_%TYPENP%(Array_%TYPENP%* array, i32 i);
+
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, i32 i);
+
+Error set_%TYPENP%(Array_%TYPENP%* array, i32 i, %TYPE% val);
+
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
+
 void pop_%TYPENP%(Array_%TYPENP%* array);
 %TEMPLATE_END%
 

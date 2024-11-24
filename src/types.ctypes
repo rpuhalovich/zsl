@@ -1,3 +1,2 @@
 TYPE i32
-TYPE u32
-TYPE f32
+TYPE i32*
