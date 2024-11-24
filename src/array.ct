@@ -15,22 +15,22 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
     return a;
 }
 
-Result_%TYPENP% aGetr_%TYPENP%(Array_%TYPENP%* array, i32 i)
+Result_%TYPENP% getr_%TYPENP%(Array_%TYPENP%* array, i32 i)
 {
     if (i < 0 || i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
     return success_%TYPENP%(array->items[i]);
 }
 
-%TYPE% aGet_%TYPENP%(Array_%TYPENP%* array, i32 i)
+%TYPE% get_%TYPENP%(Array_%TYPENP%* array, i32 i)
 {
-    Result_%TYPENP% item = aGetr_%TYPE%(array, i);
+    Result_%TYPENP% item = getr_%TYPE%(array, i);
     if (item.fail)
         exit(item.error);
     return item.result;
 }
 
-void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
+void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
 {
     array->length++;
     if (array->length >= array->capacity) {
@@ -40,7 +40,7 @@ void aAppend_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
     array->items[array->length - 1] = element;
 }
 
-void aPop_%TYPENP%(Array_%TYPENP%* array)
+void pop_%TYPENP%(Array_%TYPENP%* array)
 {
     array->length--;
     if (array->length < 0)
