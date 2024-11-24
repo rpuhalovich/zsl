@@ -10,17 +10,19 @@
 %TEMPLATE_BEGIN%
 typedef struct {
     %TYPE%* items;
-    i32 length;
-    i32 capacity;
+    u32 length;
+    u32 capacity;
 } Array_%TYPENP%;
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
 
-Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity);
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
 
-Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, i32 i);
+Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
 
-Error set_%TYPENP%(Array_%TYPENP%* array, i32 i, %TYPE% val);
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
+
+Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 

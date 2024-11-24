@@ -6,7 +6,7 @@ Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)
     return newArrayc_%TYPENP%(arena, 16);
 }
 
-Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity)
 {
     Array_%TYPENP%* a = (Array_%TYPENP%*)allocate(arena, sizeof(Array_%TYPENP%));
     a->length = 0;
@@ -15,14 +15,29 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, i32 capacity)
     return a;
 }
 
-Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, i32 i)
+Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len)
+{
+    u32 capacity = 1;
+    while (capacity < len)
+        capacity *= 2;
+
+    Array_%TYPENP%* a = newArrayc_%TYPENP%(arena, capacity);
+    a->length = len;
+
+    for (u32 i = 0; i < len; i++)
+        a->items[i] = array[i];
+
+    return a;
+}
+
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
     if (i < 0 || i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
     return success_%TYPENP%(array->items[i]);
 }
 
-Error set_%TYPENP%(Array_%TYPENP%* array, i32 i, %TYPE% val)
+Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
 {
     if (i < 0 || i >= array->length)
         return ERROR_OUT_OF_BOUNDS;
