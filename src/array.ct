@@ -8,10 +8,10 @@ Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)
 
 Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity)
 {
-    Array_%TYPENP%* a = (Array_%TYPENP%*)allocate(arena, sizeof(Array_%TYPENP%));
+    Array_%TYPENP%* a = allocate(arena, sizeof(Array_%TYPENP%));
     a->length = 0;
     a->capacity = capacity;
-    a->items = (%TYPE%*)allocate(arena, sizeof(%TYPE%) * a->capacity);
+    a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
     return a;
 }
 
