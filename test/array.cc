@@ -17,6 +17,8 @@ TEST(Array, get_push_get_pop_get_success) {
     EXPECT_EQ(3, a->length);
     EXPECT_EQ(8, a->capacity);
     EXPECT_EQ(3, get_i32(a, a->length - 1).result);
+    EXPECT_EQ(ERROR_OUT_OF_BOUNDS, get_i32(a, a->length).error);
+    EXPECT_EQ(0, get_i32(a, a->length).result);
 
     freeArena(arena);
 }

@@ -10,11 +10,11 @@ proj: ctemplate
 	cp build/compile_commands.json compile_commands.json
 	ctags -R .
 
-test: proj
+test: proj check
 	cmake --build build
 	./build/app_tests
 
-check: clean test
+check:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
 
