@@ -1,2 +1,4 @@
 TYPE i32
-TYPE i32*
+TYPE u8
+TYPE u32
+TYPE char

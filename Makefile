@@ -5,12 +5,12 @@ ctemplate:
 	ctemplate ./src/types.ctypes ./src/result.ht ./gen/result.h
 	ctemplate ./src/types.ctypes ./src/result.ct ./gen/result.c
 
-ninja: ctemplate
+proj: ctemplate
 	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G Ninja
 	cp build/compile_commands.json compile_commands.json
 	ctags -R .
 
-test: ninja
+test: proj
 	cmake --build build
 	./build/app_tests
 
@@ -21,5 +21,5 @@ check: clean test
 clean:
 	rm -rf build gen
 
-.PHONY: check clean ninja test ctemplate
+.PHONY: check clean proj test ctemplate
 .SILENT:
