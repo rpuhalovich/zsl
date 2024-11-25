@@ -1,12 +1,14 @@
 Checks: >
-  -*,
   google-*,
-  -google-readability-braces-around-statements,
-  -google-readability-todo,
   portability-*,
-  performance-*
+  performance-*,
+  cert-*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
 WarningsAsErrors: >
   -*,
   google-*,
   portability-*,
-  performance-*
+  performance-*,
+  cert-*,
+  bugprone-*,

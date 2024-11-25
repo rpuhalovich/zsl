@@ -25,8 +25,8 @@ String* newStrings(Arena* arena, String* str)
 
 i32 cmp(String* str1, String* str2)
 {
-    char s1len = str1->characters->length;
-    char s2len = str2->characters->length;
+    u32 s1len = str1->characters->length;
+    u32 s2len = str2->characters->length;
     i32 res =
         strncmp(str1->characters->items, str2->characters->items, s1len < s2len ? s1len : s2len);
     return res;
