@@ -1,28 +1,12 @@
 #include <arena.h>
 #include <stdio.h>
-
-#define ANSI_COLOR_GREEN "\x1b[32m"
-#define ANSI_COLOR_RED "\x1b[31m"
-#define ANSI_COLOR_RESET "\x1b[0m"
-
-Arena* GLOBAL_ARENA = NULL;
-
-void assert_impl(bool condition, i32 line, char* file)
-{
-    if (!condition) {
-        printf(ANSI_COLOR_RED"\nASSERTION FAILED: %s:%d\n\n"ANSI_COLOR_RESET, file, line);
-        freeArena(GLOBAL_ARENA);
-        exit(1);
-    }
-}
-
-#define ASSERT(condition) assert_impl(condition, __LINE__, __FILE__)
+#include "zassert.h"
 
 #include "test_array.c"
 
 int main(void)
 {
-    GLOBAL_ARENA = newArena(KILOBYTES(1));
+    GLOBAL_ARENA = newArena(MEGABYTES(1));
 
     // array
     {
@@ -31,7 +15,7 @@ int main(void)
         set_success();
     }
 
-    printf(ANSI_COLOR_GREEN"\nPASS\n\n"ANSI_COLOR_RESET);
+    pass();
     freeArena(GLOBAL_ARENA);
     return 0;
 }
