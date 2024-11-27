@@ -11,13 +11,13 @@ Arena* GLOBAL_ARENA = NULL;
 
 void pass(void)
 {
-    printf(ANSI_COLOR_GREEN"\nPASS\n\n"ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_GREEN "\nPASS\n\n" ANSI_COLOR_RESET);
 }
 
 void assert_impl(bool condition, i32 line, char* file)
 {
     if (!condition) {
-        printf(ANSI_COLOR_RED"\nASSERTION FAILED: %s:%d\n\n"ANSI_COLOR_RESET, file, line);
+        printf(ANSI_COLOR_RED "\nASSERTION FAILED: %s:%d\n\n" ANSI_COLOR_RESET, file, line);
         freeArena(GLOBAL_ARENA);
         exit(1);
     }
