@@ -7,7 +7,8 @@
 
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
 typedef struct {
-    Array_char* characters;
+    char* chars;
+    u32 length;
 } String;
 
 String* newString(Arena* arena);
@@ -17,5 +18,7 @@ String* newStringc(Arena* arena, char* str);
 String* newStrings(Arena* arena, String* str);
 
 i32 cmp(String* str1, String* str2);
+
+char* cstr(Arena* arena, String* str);
 
 #endif // ZSTRING_H

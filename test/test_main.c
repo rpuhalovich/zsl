@@ -3,6 +3,7 @@
 #include <ztest.h>
 
 #include "test_array.c"
+#include "test_zstring.c"
 
 int main(void)
 {
@@ -13,6 +14,13 @@ int main(void)
         get_push_get_pop_get_success();
         get_out_of_bounds_fail();
         set_success();
+    }
+
+    // string
+    {
+        newStringc_strncmp();
+        newStrings_cmp();
+        newStrings_cstr_strncmp();
     }
 
     TEST_END();
