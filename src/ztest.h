@@ -1,5 +1,5 @@
-#ifndef ZASSERT_H
-#define ZASSERT_H
+#ifndef ZTEST_H
+#define ZTEST_H
 
 #include <arena.h>
 
@@ -25,4 +25,4 @@ void assert_impl(bool condition, i32 line, char* file)
 
 #define ASSERT(condition) assert_impl(condition, __LINE__, __FILE__)
 
-#endif // ZASSERT_H
+#endif // ZTEST_H
