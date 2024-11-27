@@ -6,17 +6,21 @@ ctemplate:
 	ctemplate ./src/types.ctypes ./src/result.ct ./gen/result.c
 
 proj: ctemplate
-	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G Ninja
+	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
 	cp build/compile_commands.json compile_commands.json
 	ctags -R .
 
-test: proj check
+test: proj
 	cmake --build build
-	leaks -atExit -- ./build/ztest
+	leaks -q -atExit -- ./build/ztest
 
-check:
+format:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
+
+tidy:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
+
+check: clean ctemplate proj format tidy test
 
 clean:
 	rm -rf build gen
