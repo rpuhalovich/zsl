@@ -8,21 +8,26 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 Arena* GLOBAL_ARENA = NULL;
+int hasError = 0;
 
 void pass(void)
 {
-    printf(ANSI_COLOR_GREEN "\nPASS\n\n" ANSI_COLOR_RESET);
+    printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);
 }
 
-void assert_impl(bool condition, i32 line, char* file)
+int assert_impl(bool condition, i32 line, char* file)
 {
     if (!condition) {
-        printf(ANSI_COLOR_RED "\nASSERTION FAILED: %s:%d\n\n" ANSI_COLOR_RESET, file, line);
-        freeArena(GLOBAL_ARENA);
-        exit(1);
+        printf(ANSI_COLOR_RED "ASSERTION FAILED: %s:%d\n" ANSI_COLOR_RESET, file, line);
+        return 1;
     }
+    return 0;
 }
 
-#define ASSERT(condition) assert_impl(condition, __LINE__, __FILE__)
+#define ASSERT(condition)                                                                          \
+    if (assert_impl(condition, __LINE__, __FILE__)) {                                               \
+        hasError = 1;                                                                              \
+        return;\
+    }
 
 #endif // ZTEST_H
