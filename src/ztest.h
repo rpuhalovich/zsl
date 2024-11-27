@@ -25,9 +25,19 @@ int assert_impl(bool condition, i32 line, char* file)
 }
 
 #define ASSERT(condition)                                                                          \
-    if (assert_impl(condition, __LINE__, __FILE__)) {                                               \
+    if (assert_impl(condition, __LINE__, __FILE__)) {                                              \
         hasError = 1;                                                                              \
-        return;\
+        return;                                                                                    \
     }
+
+#define TEST_BEGIN(capacity)                                                                       \
+    printf("\n");                                                                                  \
+    GLOBAL_ARENA = newArena(capacity);
+
+#define TEST_END()                                                                                 \
+    freeArena(GLOBAL_ARENA);                                                                       \
+    if (!hasError)                                                                                 \
+        pass();                                                                                    \
+    printf("\n");
 
 #endif // ZTEST_H

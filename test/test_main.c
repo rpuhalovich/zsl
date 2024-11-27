@@ -6,8 +6,7 @@
 
 int main(void)
 {
-    printf("\n");
-    GLOBAL_ARENA = newArena(MEGABYTES(1));
+    TEST_BEGIN(MEGABYTES(1));
 
     // array
     {
@@ -16,10 +15,6 @@ int main(void)
         set_success();
     }
 
-    if (!hasError)
-        pass();
-    freeArena(GLOBAL_ARENA);
-
-    printf("\n");
+    TEST_END();
     return 0;
 }
