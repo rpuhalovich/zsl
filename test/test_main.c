@@ -18,9 +18,9 @@ int main(void)
 
     // string
     {
-        newStringc_strncmp();
-        newStrings_cmp();
-        newStrings_cstr_strncmp();
+        String_cmp();
+        String_cstr_strncmp();
+        String_getChar();
     }
 
     TEST_END();

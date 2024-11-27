@@ -35,3 +35,10 @@ char* cstr(Arena* arena, String* str)
     res[str->length] = '\0';
     return res;
 }
+
+Result_char getChar(String* str, u32 i)
+{
+    if (i < 0 || i >= str->length)
+        return fail_char(ERROR_OUT_OF_BOUNDS);
+    return success_char(str->chars[i]);
+}

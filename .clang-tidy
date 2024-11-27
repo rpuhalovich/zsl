@@ -1,5 +1,6 @@
 Checks: >
   google-*,
+  -google-readability-braces-around-statements,
   portability-*,
   performance-*,
   cert-*,
@@ -8,6 +9,7 @@ Checks: >
 WarningsAsErrors: >
   -*,
   google-*,
+  -google-readability-braces-around-statements,
   portability-*,
   performance-*,
   cert-*,

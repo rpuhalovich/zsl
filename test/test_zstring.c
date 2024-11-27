@@ -1,14 +1,6 @@
 #include <zstring.h>
 
-void newStringc_strncmp(void)
-{
-    char* teststr = "hello";
-    String* s = newStringc(GLOBAL_ARENA, teststr);
-    ASSERT(s->length == strlen(teststr));
-    ASSERT(0 == strncmp(teststr, s->chars, s->length));
-}
-
-void newStrings_cmp(void)
+void String_cmp(void)
 {
     char* teststr = "hello";
     String* s1 = newStringc(GLOBAL_ARENA, teststr);
@@ -19,9 +11,22 @@ void newStrings_cmp(void)
     ASSERT(s1->chars != s2->chars);
 }
 
-void newStrings_cstr_strncmp(void)
+void String_cstr_strncmp(void)
 {
     char* teststr = "hello";
-    String* s1 = newStringc(GLOBAL_ARENA, teststr);
-    ASSERT(0 == strncmp(teststr, cstr(GLOBAL_ARENA, s1), strlen(teststr)));
+    String* s = newStringc(GLOBAL_ARENA, teststr);
+    ASSERT(0 == strncmp(teststr, cstr(GLOBAL_ARENA, s), strlen(teststr)));
+}
+
+void String_getChar(void)
+{
+    String* s = newStringc(GLOBAL_ARENA, "hello");
+    ASSERT('h' == getChar(s, 0).result);
+    ASSERT(SUCCESS == getChar(s, 0).error);
+
+    ASSERT('o' == getChar(s, s->length - 1).result);
+    ASSERT(SUCCESS == getChar(s, s->length - 1).error);
+
+    ASSERT(0 == getChar(s, s->length).result);
+    ASSERT(ERROR_OUT_OF_BOUNDS == getChar(s, s->length).error);
 }

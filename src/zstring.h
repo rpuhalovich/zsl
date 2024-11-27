@@ -21,4 +21,6 @@ i32 cmp(String* str1, String* str2);
 
 char* cstr(Arena* arena, String* str);
 
+Result_char getChar(String* str, u32 i);
+
 #endif // ZSTRING_H
