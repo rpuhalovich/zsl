@@ -9,23 +9,7 @@ set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen")
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
 
-# google test
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/b514bdc898e2951020cbdca1304b75f5950d1f59.zip)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
-file(GLOB_RECURSE test_files
-    ${TEST_DIR}/*.cc
-    ${SRC_DIR}/*.c ${SRC_DIR}/*.h
-    ${GEN_DIR}/*.c ${GEN_DIR}/*.h)
-add_executable(app_tests ${test_files})
-target_link_libraries(app_tests GTest::gtest_main)
-target_include_directories(app_tests PUBLIC ${SRC_DIR} ${GEN_DIR})
-
-include(GoogleTest)
-gtest_discover_tests(app_tests)
+# ztest
+file(GLOB_RECURSE TEST_SOURCE ${TEST_DIR}/test_main.c ${SRC_DIR}/*.c ${SRC_DIR}/*.h ${GEN_DIR}/*.c ${GEN_DIR}/*.h)
+add_executable(ztest ${TEST_SOURCE})
+target_include_directories(ztest PUBLIC ${SRC_DIR} ${GEN_DIR})

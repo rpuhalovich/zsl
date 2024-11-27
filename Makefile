@@ -12,7 +12,7 @@ proj: ctemplate
 
 test: proj check
 	cmake --build build
-	./build/app_tests
+	leaks -atExit -- ./build/ztest
 
 check:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file

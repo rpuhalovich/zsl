@@ -33,10 +33,8 @@ typedef int64_t i64;
 
 #ifdef ZDEBUG
 #define LOG(...) printf(__VA_ARGS__)
-#define ASSERT(condition) assert(condition)
 #else
 #define LOG(...)
-#define ASSERT(condition)
 #endif
 
 #endif // TYPES_H
