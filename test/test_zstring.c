@@ -23,5 +23,5 @@ void newStrings_cstr_strncmp(void)
 {
     char* teststr = "hello";
     String* s1 = newStringc(GLOBAL_ARENA, teststr);
-    ASSERT(0 == strncmp(teststr, s1->chars, strlen(teststr)));
+    ASSERT(0 == strncmp(teststr, cstr(GLOBAL_ARENA, s1), strlen(teststr)));
 }
