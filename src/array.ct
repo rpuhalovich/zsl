@@ -47,8 +47,8 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
 {
     array->length++;
     if (array->length >= array->capacity) {
-        array->items = reallocate(arena, array->items, array->capacity, array->capacity * 2);
-        array->capacity *= 2;
+        array->items = reallocate(arena, array->items, array->capacity, array->capacity * (u64)2);
+        array->capacity *= (u64)2;
     }
     array->items[array->length - 1] = element;
 }

@@ -16,6 +16,7 @@ test: proj
 
 format:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
+	find test -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
 
 tidy:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
