@@ -6,7 +6,7 @@ ctemplate:
 	ctemplate ./src/types.ctypes ./src/result.ct ./gen/result.c
 
 proj: ctemplate
-	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug
+	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G Ninja
 	cp build/compile_commands.json compile_commands.json
 	ctags -R .
 

@@ -1,5 +1,3 @@
-#include <arena.h>
-#include <stdio.h>
 #include <ztest.h>
 
 #include "test_array.c"
