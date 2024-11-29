@@ -30,6 +30,10 @@ int assert_impl(bool condition, i32 line, char* file)
         return;                                                                                    \
     }
 
+#define TEST(testName)                                                                             \
+    printf(ANSI_COLOR_GREEN "RUNNING TEST: %s...\n" ANSI_COLOR_RESET, #testName);                  \
+    testName();
+
 #define TEST_BEGIN(capacity)                                                                       \
     printf("\n");                                                                                  \
     GLOBAL_ARENA = newArena(capacity);

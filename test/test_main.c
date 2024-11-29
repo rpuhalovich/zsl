@@ -9,16 +9,16 @@ int main(void)
 
     // array
     {
-        get_push_get_pop_get_success();
-        get_out_of_bounds_fail();
-        set_success();
+        TEST(get_push_get_pop_get_success);
+        TEST(get_out_of_bounds_fail);
+        TEST(set_success);
     }
 
     // string
     {
-        String_cmp();
-        String_cstr_strncmp();
-        String_getChar();
+        TEST(String_cmp);
+        TEST(String_cstr_strncmp);
+        TEST(String_getChar);
     }
 
     TEST_END();
