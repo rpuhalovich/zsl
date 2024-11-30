@@ -12,7 +12,7 @@ proj: ctemplate
 
 test: proj
 	cmake --build build
-	leaks -q -atExit -- ./build/ztest
+	./build/ztest
 
 format:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-format -i --style=file
@@ -21,7 +21,9 @@ format:
 tidy:
 	find src -iname "*.h" -o -iname "*.c" | xargs clang-tidy
 
-check: clean ctemplate proj format tidy test
+check: clean ctemplate proj format tidy
+	cmake --build build
+	leaks --atExit -- ./build/ztest
 
 clean:
 	rm -rf build gen

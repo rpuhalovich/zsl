@@ -13,7 +13,7 @@ typedef struct {
 
 String* newString(Arena* arena);
 
-String* newStringc(Arena* arena, char* str);
+String* newStringc(Arena* arena, char* str, u32 len);
 
 String* newStrings(Arena* arena, String* str);
 

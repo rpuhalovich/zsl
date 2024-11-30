@@ -2,10 +2,10 @@
 
 #include "zstring.h"
 
-String* newStringc(Arena* arena, char* str)
+String* newStringc(Arena* arena, char* str, u32 len)
 {
     String* s = allocate(arena, sizeof(String));
-    s->length = strlen(str);
+    s->length = len;
     s->chars = allocate(arena, sizeof(char) * s->length);
     memcpy(s->chars, str, s->length);
     return s;
