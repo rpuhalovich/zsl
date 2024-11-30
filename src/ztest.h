@@ -18,7 +18,7 @@ void pass(void)
 int assert_impl(bool condition, i32 line, char* file)
 {
     if (!condition) {
-        printf(ANSI_COLOR_RED "ASSERTION FAILED: %s:%d\n" ANSI_COLOR_RESET, file, line);
+        printf(ANSI_COLOR_RED "     ASSERTION FAILED: %s:%d\n" ANSI_COLOR_RESET, file, line);
         return 1;
     }
     return 0;
@@ -41,7 +41,9 @@ int assert_impl(bool condition, i32 line, char* file)
 #define TEST_END()                                                                                 \
     freeArena(GLOBAL_ARENA);                                                                       \
     if (!hasError)                                                                                 \
-        pass();                                                                                    \
+        printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);                                        \
+    else                                                                                           \
+        printf(ANSI_COLOR_RED "FAIL\n" ANSI_COLOR_RESET);                                          \
     printf("\n");
 
 #endif // ZTEST_H
