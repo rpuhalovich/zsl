@@ -16,6 +16,7 @@ TEST(get_push_get_pop_get_success)
 TEST(get_out_of_bounds_fail)
 {
     Arena* a = newArena(KILOBYTES(16));
+
     Array_i32* arr = newArraya_i32(a, (i32[]){1, 2, 3, 4, 5}, 5);
 
     Result_i32 i = get_i32(arr, arr->length);
@@ -36,8 +37,11 @@ TEST(get_out_of_bounds_fail)
 TEST(set_success)
 {
     Arena* a = newArena(KILOBYTES(16));
+
     Array_i32* arr = newArraya_i32(a, (i32[]){1, 2, 3}, 3);
     ASSERT(SUCCESS == set_i32(arr, 1, 10));
     ASSERT(10 == get_i32(arr, 1).result);
     ASSERT(ERROR_OUT_OF_BOUNDS == set_i32(arr, INT_MAX, 1));
+
+    freeArena(a);
 }
