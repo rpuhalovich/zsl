@@ -8,18 +8,10 @@
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
-int assert_impl(int condition, int line, char* file)
-{
-    if (!condition) {
-        printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, file, line);
-        return 1;
-    }
-    return 0;
-}
-
 int errorCount = 0;
 #define ASSERT(condition)                                                                          \
-    if (assert_impl(condition, __LINE__, __FILE__)) {                                              \
+    if (!(condition)) {                                                                            \
+        printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);  \
         errorCount++;                                                                              \
         return;                                                                                    \
     }
