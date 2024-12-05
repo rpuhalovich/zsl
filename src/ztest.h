@@ -10,11 +10,6 @@
 Arena* GLOBAL_ARENA = NULL;
 int hasError = 0;
 
-void pass(void)
-{
-    printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);
-}
-
 int assert_impl(bool condition, i32 line, char* file)
 {
     if (!condition) {
@@ -30,20 +25,53 @@ int assert_impl(bool condition, i32 line, char* file)
         return;                                                                                    \
     }
 
-#define TEST(testName)                                                                             \
-    printf(ANSI_COLOR_GREEN "RUNNING TEST: %s...\n" ANSI_COLOR_RESET, #testName);                  \
-    testName();
+#define TEST(testName)
 
-#define TEST_BEGIN(capacity)                                                                       \
-    printf("\n");                                                                                  \
-    GLOBAL_ARENA = newArena(capacity);
+// Taken from: <https://github.com/jasmcaus/tau>
+// I have no idea how the fuck this works, but it looks like it
+// executes the scope underneath before the main function
+#if defined(_MSC_VER)
+    #if defined(_WIN64)
+        #define ZSL_SYMBOL_PREFIX
+    #else
+        #define ZSL_SYMBOL_PREFIX "_"
+    #endif // _WIN64
 
-#define TEST_END()                                                                                 \
-    freeArena(GLOBAL_ARENA);                                                                       \
-    if (!hasError)                                                                                 \
-        printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);                                        \
-    else                                                                                           \
-        printf(ANSI_COLOR_RED "FAIL\n" ANSI_COLOR_RESET);                                          \
-    printf("\n");
+    #pragma section(".CRT$XCU", read)
+    #define ZSL_TEST_INITIALIZER(f)                                                          \
+        static void __cdecl f(void);                                                         \
+        __pragma(comment(linker, "/include:" ZSL_SYMBOL_PREFIX #f "_"))                      \
+        ZSL_C_FUNC __declspec(allocate(".CRT$XCU")) void(__cdecl * f##_)(void) = f;       \
+        static void __cdecl f(void)
+#else
+    #define ZSL_TEST_INITIALIZER(f)                             \
+        static void f(void)     __attribute__((constructor));   \
+        static void f(void)
+#endif // _MSC_VER
+
+typedef struct {
+    void (*tests[10000])(void);
+    u32 numTests;
+} ZTestContext;
+ZTestContext zTestContext = {0};
+
+static i32 zTestMain(void);
+inline i32 zTestMain(void)
+{
+    GLOBAL_ARENA = newArena(MEGABYTES(1));
+
+    for (u32 i = 0; i < zTestContext.numTests; i++) {
+        zTestContext.tests[i]();
+    }
+
+    freeArena(GLOBAL_ARENA);
+    return 0;
+}
+
+#define ZTEST_MAIN()\
+    ZtestContext zTestContext = {0};\
+    int main(void) {\
+        return zTestMain();\
+    }
 
 #endif // ZTEST_H
