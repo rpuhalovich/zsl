@@ -9,7 +9,6 @@ set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen")
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
 
-# ztest
 file(GLOB_RECURSE TEST_SOURCE ${TEST_DIR}/test_main.c ${SRC_DIR}/*.c ${SRC_DIR}/*.h ${GEN_DIR}/*.c ${GEN_DIR}/*.h)
 add_executable(ztest ${TEST_SOURCE})
 target_include_directories(ztest PUBLIC ${SRC_DIR} ${GEN_DIR})

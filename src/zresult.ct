@@ -1,4 +1,4 @@
-#include "result.h"
+#include "zresult.h"
 
 %TEMPLATE_BEGIN%
 Result_%TYPENP% fail_%TYPENP%(Error error)

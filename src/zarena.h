@@ -1,7 +1,7 @@
 #ifndef ARENA_H
 #define ARENA_H
 
-#include "types.h"
+#include "ztypes.h"
 
 #define KILOBYTES(number) ((number) * 1024ull)
 #define MEGABYTES(number) (KILOBYTES(number) * 1024ull)

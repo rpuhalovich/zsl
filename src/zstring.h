@@ -1,9 +1,9 @@
 #ifndef ZSTRING_H
 #define ZSTRING_H
 
-#include "arena.h"
-#include "array.h"
-#include "types.h"
+#include "zarena.h"
+#include "zarray.h"
+#include "ztypes.h"
 
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
 typedef struct {

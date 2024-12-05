@@ -1,9 +1,9 @@
 ctemplate:
 	mkdir -p ./gen
-	ctemplate ./src/types.ctypes ./src/array.ht ./gen/array.h
-	ctemplate ./src/types.ctypes ./src/array.ct ./gen/array.c
-	ctemplate ./src/types.ctypes ./src/result.ht ./gen/result.h
-	ctemplate ./src/types.ctypes ./src/result.ct ./gen/result.c
+	ctemplate ./src/_types.ctypes ./src/zarray.ht ./gen/zarray.h
+	ctemplate ./src/_types.ctypes ./src/zarray.ct ./gen/zarray.c
+	ctemplate ./src/_types.ctypes ./src/zresult.ht ./gen/zresult.h
+	ctemplate ./src/_types.ctypes ./src/zresult.ct ./gen/zresult.c
 
 proj: ctemplate
 	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -G Ninja

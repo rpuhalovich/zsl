@@ -1,4 +1,4 @@
-#include "array.h"
+#include "zarray.h"
 
 %TEMPLATE_BEGIN%
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)

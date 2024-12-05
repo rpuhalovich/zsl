@@ -1,5 +1,5 @@
-#include <array.h>
 #include <limits.h>
+#include <zarray.h>
 
 TEST(get_push_get_pop_get_success)
 {

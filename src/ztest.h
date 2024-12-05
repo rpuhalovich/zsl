@@ -1,7 +1,7 @@
 #ifndef ZTEST_H
 #define ZTEST_H
 
-#include <arena.h>
+#include <zarena.h>
 
 #define ANSI_COLOR_GREEN "\x1b[32m"
 #define ANSI_COLOR_RED "\x1b[31m"

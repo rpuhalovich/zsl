@@ -1,4 +1,4 @@
-#include "arena.h"
+#include "zarena.h"
 
 Arena* newArena(u64 size)
 {

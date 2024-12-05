@@ -1,9 +1,9 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
-#include "arena.h"
-#include "types.h"
-#include "result.h"
+#include "zarena.h"
+#include "ztypes.h"
+#include "zresult.h"
 
 %INCLUDE%
 
