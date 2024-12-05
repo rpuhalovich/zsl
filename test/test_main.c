@@ -3,4 +3,4 @@
 #include "test_zarray.c"
 #include "test_zstring.c"
 
-ZTEST_MAIN(MEGABYTES(1))
+ZTEST_MAIN()

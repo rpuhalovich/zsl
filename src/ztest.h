@@ -1,14 +1,15 @@
 #ifndef ZTEST_H
 #define ZTEST_H
 
-#include <zarena.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define ANSI_COLOR_GREEN "\x1b[32m"
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 int errorCount = 0;
-int assert_impl(bool condition, i32 line, char* file)
+int assert_impl(int condition, int line, char* file)
 {
     if (!condition) {
         printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, file, line);
@@ -26,7 +27,7 @@ int assert_impl(bool condition, i32 line, char* file)
 typedef struct {
     void (*tests[10000])(void);
     char* testNames[10000];
-    u32 numTests;
+    int numTests;
 } ZTestContext;
 ZTestContext zTestContext;
 
@@ -55,7 +56,7 @@ ZTestContext zTestContext;
     static void _TEST_##testName(void);                                                            \
     ZSL_TEST_INITIALIZER(_REGISTER_TEST_##testName)                                                \
     {                                                                                              \
-        i32 index = zTestContext.numTests++;                                                       \
+        int index = zTestContext.numTests++;                                                       \
         zTestContext.tests[index] = &_TEST_##testName;                                             \
         const char* name = #testName;                                                              \
         zTestContext.testNames[index] = malloc(strlen(name) + 1);                                  \
@@ -63,16 +64,12 @@ ZTestContext zTestContext;
     }                                                                                              \
     void _TEST_##testName(void)
 
-Arena* GLOBAL_ARENA = NULL;
-static i32 zTestMain(u64 globalArenaNumBytes);
-inline i32 zTestMain(u64 globalArenaNumBytes)
+static int zTestMain(void);
+inline int zTestMain(void)
 {
-    GLOBAL_ARENA = newArena(globalArenaNumBytes);
-
-    for (u32 i = 0; i < zTestContext.numTests; i++) {
+    for (int i = 0; i < zTestContext.numTests; i++) {
         printf(ANSI_COLOR_GREEN "RUN %s...\n" ANSI_COLOR_RESET, zTestContext.testNames[i]);
         zTestContext.tests[i]();
-        clear(GLOBAL_ARENA);
     }
     printf("\n");
 
@@ -85,18 +82,17 @@ inline i32 zTestMain(u64 globalArenaNumBytes)
     if (errorCount > 0)
         printf("Fail count: %d\n", errorCount);
 
-    for (u32 i = 0; i < zTestContext.numTests; i++)
+    for (int i = 0; i < zTestContext.numTests; i++)
         free(zTestContext.testNames[i]);
 
-    freeArena(GLOBAL_ARENA);
     return 0;
 }
 
-#define ZTEST_MAIN(globalArenaNumBytes)                                                            \
+#define ZTEST_MAIN()                                                                               \
     ZTestContext zTestContext = {0};                                                               \
     int main(void)                                                                                 \
     {                                                                                              \
-        return zTestMain(globalArenaNumBytes);                                                     \
+        return zTestMain();                                                                        \
     }
 
 #endif // ZTEST_H
