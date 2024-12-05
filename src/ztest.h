@@ -8,7 +8,6 @@
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
-int errorCount = 0;
 int assert_impl(int condition, int line, char* file)
 {
     if (!condition) {
@@ -18,6 +17,7 @@ int assert_impl(int condition, int line, char* file)
     return 0;
 }
 
+int errorCount = 0;
 #define ASSERT(condition)                                                                          \
     if (assert_impl(condition, __LINE__, __FILE__)) {                                              \
         errorCount++;                                                                              \
