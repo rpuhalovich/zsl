@@ -20,7 +20,6 @@ typedef struct {
 } Result_%TYPENP%;
 
 Result_%TYPENP% fail_%TYPENP%(Error error);
-
 Result_%TYPENP% success_%TYPENP%(%TYPE% result);
 %TEMPLATE_END%
 

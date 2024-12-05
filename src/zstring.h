@@ -12,15 +12,10 @@ typedef struct {
 } String;
 
 String* newString(Arena* arena);
-
 String* newStringc(Arena* arena, char* str, u32 len);
-
 String* newStrings(Arena* arena, String* str);
-
 i32 cmp(String* str1, String* str2);
-
 char* cstr(Arena* arena, String* str);
-
 Result_char getChar(String* str, u32 i);
 
 #endif // ZSTRING_H

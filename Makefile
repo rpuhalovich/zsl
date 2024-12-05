@@ -6,7 +6,7 @@ ctemplate:
 	ctemplate ./src/_types.ctypes ./src/zresult.ct ./gen/zresult.c
 
 proj: ctemplate
-	cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -GNinja
+	cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug -GNinja
 	cp build/compile_commands.json compile_commands.json
 	ctags -R .
 

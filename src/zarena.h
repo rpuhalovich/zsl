@@ -20,15 +20,10 @@ typedef struct {
 } Arena;
 
 Arena* newArena(u64 size);
-
 Arena* newArenaa(Arena* arena, u64 size);
-
 void* allocate(Arena* a, u64 size);
-
 void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize);
-
 void clear(Arena* a);
-
 void freeArena(Arena* a);
 
 #endif // ARENA_H
