@@ -1,7 +1,7 @@
 #ifndef ZMATH_H
 #define ZMATH_H
 
-#include "types.h"
+#include "ztypes.h"
 
 typedef struct {
     f32 x;
