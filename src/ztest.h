@@ -7,9 +7,6 @@
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
-Arena* GLOBAL_ARENA = NULL;
-int hasError = 0;
-
 int assert_impl(bool condition, i32 line, char* file)
 {
     if (!condition) {
@@ -25,7 +22,14 @@ int assert_impl(bool condition, i32 line, char* file)
         return;                                                                                    \
     }
 
-#define TEST(testName)
+typedef struct {
+    void (*tests[10000])(void);
+    u32 numTests;
+} ZTestContext;
+
+Arena* GLOBAL_ARENA = NULL;
+int hasError = 0;
+ZTestContext zTestContext;
 
 // Taken from: <https://github.com/jasmcaus/tau>
 // I have no idea how the fuck this works, but it looks like it
@@ -49,16 +53,19 @@ int assert_impl(bool condition, i32 line, char* file)
         static void f(void)
 #endif // _MSC_VER
 
-typedef struct {
-    void (*tests[10000])(void);
-    u32 numTests;
-} ZTestContext;
-ZTestContext zTestContext = {0};
+#define TEST(testName)\
+    static void _TEST_##testName(void);\
+    ZSL_TEST_INITIALIZER(_REGISTER_TEST_##testName)\
+    {\
+        i32 index = zTestContext.numTests++;\
+        zTestContext.tests[index] = &_TEST_##testName;\
+    }\
+    void _TEST_##testName(void)
 
-static i32 zTestMain(void);
-inline i32 zTestMain(void)
+static i32 zTestMain(u64 globalArenaNumBytes);
+inline i32 zTestMain(u64 globalArenaNumBytes)
 {
-    GLOBAL_ARENA = newArena(MEGABYTES(1));
+    GLOBAL_ARENA = newArena(globalArenaNumBytes);
 
     for (u32 i = 0; i < zTestContext.numTests; i++) {
         zTestContext.tests[i]();
@@ -68,10 +75,10 @@ inline i32 zTestMain(void)
     return 0;
 }
 
-#define ZTEST_MAIN()\
-    ZtestContext zTestContext = {0};\
+#define ZTEST_MAIN(globalArenaNumBytes)\
+    ZTestContext zTestContext = {0};\
     int main(void) {\
-        return zTestMain();\
+        return zTestMain(globalArenaNumBytes);\
     }
 
 #endif // ZTEST_H
