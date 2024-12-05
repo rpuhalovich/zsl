@@ -5,8 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -Wall -Wextra -Wpedantic -Werror")
 
-option(BUILD_TESTS "Build tests")
-
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen")
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
