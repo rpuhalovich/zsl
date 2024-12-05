@@ -23,4 +23,22 @@ Result_%TYPENP% fail_%TYPENP%(Error error);
 Result_%TYPENP% success_%TYPENP%(%TYPE% result);
 %TEMPLATE_END%
 
+#ifndef ZSL_RESULT_IMPLEMENTATION
+%TEMPLATE_BEGIN%
+Result_%TYPENP% fail_%TYPENP%(Error error)
+{
+    Result_%TYPENP% failResult = {0};
+    failResult.error = error;
+    return failResult;
+}
+
+Result_%TYPENP% success_%TYPENP%(%TYPE% result)
+{
+    Result_%TYPENP% successResult = {0};
+    successResult.result = result;
+    return successResult;
+}
+%TEMPLATE_END%
+#endif // ZSL_RESULT_IMPLEMENTATION
+
 #endif // RESULT_H

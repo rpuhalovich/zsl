@@ -63,16 +63,12 @@ ZTestContext zTestContext;
     }                                                                                              \
     void _TEST_##testName(void)
 
-Arena* GLOBAL_ARENA = NULL;
-static i32 zTestMain(u64 globalArenaNumBytes);
-inline i32 zTestMain(u64 globalArenaNumBytes)
+static i32 zTestMain(void);
+inline i32 zTestMain(void)
 {
-    GLOBAL_ARENA = newArena(globalArenaNumBytes);
-
     for (u32 i = 0; i < zTestContext.numTests; i++) {
         printf(ANSI_COLOR_GREEN "RUN %s...\n" ANSI_COLOR_RESET, zTestContext.testNames[i]);
         zTestContext.tests[i]();
-        clear(GLOBAL_ARENA);
     }
     printf("\n");
 
@@ -88,15 +84,14 @@ inline i32 zTestMain(u64 globalArenaNumBytes)
     for (u32 i = 0; i < zTestContext.numTests; i++)
         free(zTestContext.testNames[i]);
 
-    freeArena(GLOBAL_ARENA);
     return 0;
 }
 
-#define ZTEST_MAIN(globalArenaNumBytes)                                                            \
+#define ZTEST_MAIN()                                                                               \
     ZTestContext zTestContext = {0};                                                               \
     int main(void)                                                                                 \
     {                                                                                              \
-        return zTestMain(globalArenaNumBytes);                                                     \
+        return zTestMain();                                                                        \
     }
 
 #endif // ZTEST_H
