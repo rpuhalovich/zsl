@@ -20,7 +20,7 @@ typedef signed int i32;
 typedef unsigned long u64;
 typedef signed long i64;
 #else
-#include <stdint.h>
+    #include <stdint.h>
 typedef uint8_t u8;
 typedef int8_t i8;
 typedef uint16_t u16;
@@ -32,9 +32,9 @@ typedef int64_t i64;
 #endif
 
 #ifdef ZDEBUG
-#define LOG(...) printf(__VA_ARGS__)
+    #define LOG(...) printf(__VA_ARGS__)
 #else
-#define LOG(...)
+    #define LOG(...)
 #endif
 
 #endif // TYPES_H

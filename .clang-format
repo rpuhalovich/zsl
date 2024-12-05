@@ -1,4 +1,5 @@
 # from: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+IndentPPDirectives: BeforeHash
 Language: Cpp
 BasedOnStyle: LLVM
 IndentWidth: 4

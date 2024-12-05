@@ -1,6 +1,6 @@
 #include <zstring.h>
 
-void String_cmp(void)
+TEST(String_cmp)
 {
     char* teststr = "hello";
     String* s1 = newStringc(GLOBAL_ARENA, teststr, strlen(teststr));
@@ -11,14 +11,14 @@ void String_cmp(void)
     ASSERT(s1->chars != s2->chars);
 }
 
-void String_cstr_strncmp(void)
+TEST(String_cstr_strncmp)
 {
     char* teststr = "hello";
     String* s = newStringc(GLOBAL_ARENA, teststr, strlen(teststr));
     ASSERT(0 == strncmp(teststr, cstr(GLOBAL_ARENA, s), strlen(teststr)));
 }
 
-void String_getChar(void)
+TEST(String_getChar)
 {
     char* teststr = "hello";
     String* s = newStringc(GLOBAL_ARENA, teststr, strlen(teststr));
