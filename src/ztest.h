@@ -72,6 +72,7 @@ inline i32 zTestMain(u64 globalArenaNumBytes)
     for (u32 i = 0; i < zTestContext.numTests; i++) {
         printf(ANSI_COLOR_GREEN "RUN %s...\n" ANSI_COLOR_RESET, zTestContext.testNames[i]);
         zTestContext.tests[i]();
+        clear(GLOBAL_ARENA);
     }
     printf("\n");
 
