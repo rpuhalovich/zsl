@@ -8,10 +8,11 @@ TEST(String_cmp)
     String* s1 = newStringc(a, teststr, strlen(teststr));
     String* s2 = newStrings(a, s1);
 
-    ASSERT(s1->length == s2->length);
-    ASSERT(0 == cmp(s1, s2));
-    ASSERT(s1->chars != s2->chars);
+    ASSERTC(s1->length == s2->length);
+    ASSERTC(0 == cmp(s1, s2));
+    ASSERTC(s1->chars != s2->chars);
 
+clean:
     freeArena(a);
 }
 
@@ -21,8 +22,9 @@ TEST(String_cstr_strncmp)
 
     char* teststr = "hello";
     String* s = newStringc(a, teststr, strlen(teststr));
-    ASSERT(0 == strncmp(teststr, cstr(a, s), strlen(teststr)));
+    ASSERTC(0 == strncmp(teststr, cstr(a, s), strlen(teststr)));
 
+clean:
     freeArena(a);
 }
 
@@ -32,14 +34,15 @@ TEST(String_getChar)
 
     char* teststr = "hello";
     String* s = newStringc(a, teststr, strlen(teststr));
-    ASSERT('h' == getChar(s, 0).result);
-    ASSERT(SUCCESS == getChar(s, 0).error);
+    ASSERTC('h' == getChar(s, 0).result);
+    ASSERTC(SUCCESS == getChar(s, 0).error);
 
-    ASSERT('o' == getChar(s, s->length - 1).result);
-    ASSERT(SUCCESS == getChar(s, s->length - 1).error);
+    ASSERTC('o' == getChar(s, s->length - 1).result);
+    ASSERTC(SUCCESS == getChar(s, s->length - 1).error);
 
-    ASSERT(0 == getChar(s, s->length).result);
-    ASSERT(ERROR_OUT_OF_BOUNDS == getChar(s, s->length).error);
+    ASSERTC(0 == getChar(s, s->length).result);
+    ASSERTC(ERROR_OUT_OF_BOUNDS == getChar(s, s->length).error);
 
+clean:
     freeArena(a);
 }

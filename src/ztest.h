@@ -16,6 +16,13 @@ int errorCount = 0;
         return;                                                                                    \
     }
 
+#define ASSERTC(condition)                                                                         \
+    if (!(condition)) {                                                                            \
+        printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);  \
+        errorCount++;                                                                              \
+        goto clean;                                                                                \
+    }
+
 typedef struct {
     void (*tests[10000])(void);
     char* testNames[10000];
