@@ -14,3 +14,6 @@ WarningsAsErrors: >
   performance-*,
   cert-*,
   bugprone-*,
+  -bugprone-reserved-identifier,
+  -cert-dcl37-c,
+  -cert-dcl51-cpp
