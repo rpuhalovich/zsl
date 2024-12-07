@@ -30,7 +30,7 @@ Arena* newArenaa(Arena* arena, u64 size)
 
 void* allocate(Arena* a, u64 size)
 {
-    assert(a->ptr + size < a->ptr + a->capacity);
+    assert(a->ptr + size < a->memory + a->capacity);
 
     u8* ptr = a->ptr;
     a->ptr += size;
@@ -40,7 +40,7 @@ void* allocate(Arena* a, u64 size)
 
 void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
 {
-    assert(a->ptr + newsize < a->ptr + a->capacity);
+    assert(a->ptr + newsize < a->memory + a->capacity);
 
     void* newptr = a->ptr;
     a->ptr += newsize;
