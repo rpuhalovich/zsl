@@ -3,10 +3,14 @@
 
 #include "zarena.h"
 #include "zarray.h"
+#include "zresult.h"
 #include "ztypes.h"
 
+struct _Result_char;
+typedef struct _Result_char Result_char;
+
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
-typedef struct {
+typedef struct _String {
     char* chars;
     u32 length;
 } String;

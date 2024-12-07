@@ -5,6 +5,9 @@
 
 %INCLUDE%
 
+struct _String;
+typedef struct _String String;
+
 typedef enum {
     SUCCESS = 0,
     ERROR_UNEXPECTED,
@@ -14,7 +17,7 @@ typedef enum {
 typedef i32 Error;
 
 %TEMPLATE_BEGIN%
-typedef struct {
+typedef struct _Result_%TYPENP% {
     %TYPE% result;
     Error error;
 } Result_%TYPENP%;

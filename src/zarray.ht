@@ -8,7 +8,15 @@
 %INCLUDE%
 
 %TEMPLATE_BEGIN%
-typedef struct {
+struct _Array_%TYPENP%;
+typedef struct _Array_%TYPENP% Array_%TYPENP%;
+
+struct _Result_%TYPENP%;
+typedef struct _Result_%TYPENP% Result_%TYPENP%;
+
+typedef i32 Error;
+
+typedef struct _Array_%TYPENP% {
     %TYPE%* items;
     u32 length;
     u32 capacity;
