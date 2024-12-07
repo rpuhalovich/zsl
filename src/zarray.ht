@@ -7,11 +7,7 @@
 
 %INCLUDE%
 
-struct _String;
-typedef struct _String String;
-
-struct _Button;
-typedef struct _Button Button;
+%FORWARD%
 
 typedef i32 Error;
 
