@@ -14,7 +14,6 @@ typedef struct _String {
     u32 length;
 } String;
 
-String* newString(Arena* arena);
 String* newStringc(Arena* arena, char* str, u32 len);
 String* newStrings(Arena* arena, String* str);
 i32 cmp(String* str1, String* str2);
