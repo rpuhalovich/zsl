@@ -58,18 +58,18 @@ typedef int64_t i64;
 // Untangling Lifetimes - The Arena Allocator: https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator
 // clang-format on
 
-typedef struct {
+struct Arena {
     u8* memory;
     u8* ptr;
     u64 capacity;
-} Arena;
+};
 
-Arena* newArena(u64 size);
-Arena* newArenaa(Arena* arena, u64 size);
-void* allocate(Arena* a, u64 size);
-void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize);
-void clear(Arena* a);
-void freeArena(Arena* a);
+struct Arena* newArena(u64 size);
+struct Arena* newArenaa(struct Arena* arena, u64 size);
+void* allocate(struct Arena* a, u64 size);
+void* reallocate(struct Arena* a, void* ptr, u64 oldsize, u64 newsize);
+void clear(struct Arena* a);
+void freeArena(struct Arena* a);
 // END ZARENA
 
 // BEGIN ZRESULT
@@ -82,39 +82,33 @@ typedef enum {
 typedef i32 Error;
 
 %TEMPLATE_BEGIN%
-typedef struct _Result_%TYPENP% {
+struct Result_%TYPENP% {
     %TYPE% result;
     Error error;
-} Result_%TYPENP%;
+};
 
-Result_%TYPENP% fail_%TYPENP%(Error error);
-Result_%TYPENP% success_%TYPENP%(%TYPE% result);
+struct Result_%TYPENP% fail_%TYPENP%(Error error);
+struct Result_%TYPENP% success_%TYPENP%(%TYPE% result);
 %TEMPLATE_END%
 // END ZRESULT
 
 // BEGIN ZARRAY
 %TEMPLATE_BEGIN%
-struct _Array_%TYPENP%;
-typedef struct _Array_%TYPENP% Array_%TYPENP%;
-
-struct _Result_%TYPENP%;
-typedef struct _Result_%TYPENP% Result_%TYPENP%;
-
-typedef struct _Array_%TYPENP% {
+struct Array_%TYPENP% {
     %TYPE%* items;
     u32 length;
     u32 capacity;
-} Array_%TYPENP%;
+};
 
-Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
-Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
-Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length);
-Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
-Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
-Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
-void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
-void pop_%TYPENP%(Array_%TYPENP%* array);
-void clear_%TYPENP%(Array_%TYPENP%* array);
+struct Array_%TYPENP%* newArray_%TYPENP%(struct Arena* arena);
+struct Array_%TYPENP%* newArrayc_%TYPENP%(struct Arena* arena, u32 capacity);
+struct Array_%TYPENP%* newArrayl_%TYPENP%(struct Arena* arena, u32 length);
+struct Array_%TYPENP%* newArraya_%TYPENP%(struct Arena* arena, %TYPE%* array, u32 len);
+struct Result_%TYPENP% get_%TYPENP%(struct Array_%TYPENP%* array, u32 i);
+Error set_%TYPENP%(struct Array_%TYPENP%* array, u32 i, %TYPE% val);
+void push_%TYPENP%(struct Arena* arena, struct Array_%TYPENP%* array, %TYPE% element);
+void pop_%TYPENP%(struct Array_%TYPENP%* array);
+void clear_%TYPENP%(struct Array_%TYPENP%* array);
 %TEMPLATE_END%
 // END ZARRAY
 
@@ -124,11 +118,11 @@ typedef struct _String {
     u32 length;
 } String;
 
-String* newStringc(Arena* arena, char* str, u32 len);
-String* newStrings(Arena* arena, String* str);
+String* newStringc(struct Arena* arena, char* str, u32 len);
+String* newStrings(struct Arena* arena, String* str);
 i32 cmp(String* str1, String* str2);
-char* cstr(Arena* arena, String* str);
-Result_char getChar(String* str, u32 i);
+char* cstr(struct Arena* arena, String* str);
+struct Result_char getChar(String* str, u32 i);
 // END ZSTRING
 
 #endif // ZSL_H
@@ -136,10 +130,10 @@ Result_char getChar(String* str, u32 i);
 #ifdef ZSL_IMPLEMENTATION
 
 // BEGIN ZARENA IMPLEMENTATION
-Arena* newArena(u64 size)
+struct Arena* newArena(u64 size)
 {
-    Arena* a = malloc(sizeof(Arena));
-    memset(a, 0, sizeof(Arena));
+    struct Arena* a = malloc(sizeof(struct Arena));
+    memset(a, 0, sizeof(struct Arena));
 
     a->memory = malloc(size);
     memset(a->memory, 0, size);
@@ -150,10 +144,10 @@ Arena* newArena(u64 size)
     return a;
 }
 
-Arena* newArenaa(Arena* arena, u64 size)
+struct Arena* newArenaa(struct Arena* arena, u64 size)
 {
-    Arena* a = allocate(arena, size);
-    memset(a, 0, sizeof(Arena));
+    struct Arena* a = allocate(arena, size);
+    memset(a, 0, sizeof(struct Arena));
 
     a->memory = allocate(arena, size);
     memset(a->memory, 0, size);
@@ -164,7 +158,7 @@ Arena* newArenaa(Arena* arena, u64 size)
     return a;
 }
 
-void* allocate(Arena* a, u64 size)
+void* allocate(struct Arena* a, u64 size)
 {
     assert(a->ptr + size < a->memory + a->capacity);
 
@@ -174,7 +168,7 @@ void* allocate(Arena* a, u64 size)
     return ptr;
 }
 
-void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
+void* reallocate(struct Arena* a, void* ptr, u64 oldsize, u64 newsize)
 {
     assert(a->ptr + newsize < a->memory + a->capacity);
 
@@ -185,13 +179,13 @@ void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
     return newptr;
 }
 
-void freeArena(Arena* a)
+void freeArena(struct Arena* a)
 {
     free(a->memory);
     free(a);
 }
 
-void clear(Arena* a)
+void clear(struct Arena* a)
 {
     memset(a->memory, 0, a->capacity);
     a->ptr = a->memory;
@@ -200,16 +194,16 @@ void clear(Arena* a)
 
 // BEGIN ZRESULT IMPLEMENTATION
 %TEMPLATE_BEGIN%
-Result_%TYPENP% fail_%TYPENP%(Error error)
+struct Result_%TYPENP% fail_%TYPENP%(Error error)
 {
-    Result_%TYPENP% failResult = {0};
+    struct Result_%TYPENP% failResult = {0};
     failResult.error = error;
     return failResult;
 }
 
-Result_%TYPENP% success_%TYPENP%(%TYPE% result)
+struct Result_%TYPENP% success_%TYPENP%(%TYPE% result)
 {
-    Result_%TYPENP% successResult = {0};
+    struct Result_%TYPENP% successResult = {0};
     successResult.result = result;
     return successResult;
 }
@@ -218,58 +212,58 @@ Result_%TYPENP% success_%TYPENP%(%TYPE% result)
 
 // BEGIN ZARRAY IMPLEMENTATION
 %TEMPLATE_BEGIN%
-Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)
+struct Array_%TYPENP%* newArray_%TYPENP%(struct Arena* arena)
 {
     return newArrayc_%TYPENP%(arena, 16);
 }
 
-Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity)
+struct Array_%TYPENP%* newArrayc_%TYPENP%(struct Arena* arena, u32 capacity)
 {
     u32 b2capacity = 1;
     while (b2capacity < capacity)
         b2capacity *= 2;
 
-    Array_%TYPENP%* a = allocate(arena, sizeof(Array_%TYPENP%));
+    struct Array_%TYPENP%* a = allocate(arena, sizeof(struct Array_%TYPENP%));
     a->length = 0;
     a->capacity = b2capacity;
     a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
     return a;
 }
 
-Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length)
+struct Array_%TYPENP%* newArrayl_%TYPENP%(struct Arena* arena, u32 length)
 {
     u32 capacity = 1;
     while (capacity < length)
         capacity *= 2;
 
-    Array_%TYPENP%* a = allocate(arena, sizeof(Array_%TYPENP%));
+    struct Array_%TYPENP%* a = allocate(arena, sizeof(struct Array_%TYPENP%));
     a->length = length;
     a->capacity = capacity;
     a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
     return a;
 }
 
-Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len)
+struct Array_%TYPENP%* newArraya_%TYPENP%(struct Arena* arena, %TYPE%* array, u32 len)
 {
     u32 capacity = 1;
     while (capacity < len)
         capacity *= 2;
 
-    Array_%TYPENP%* a = newArrayc_%TYPENP%(arena, capacity);
+    struct Array_%TYPENP%* a = newArrayc_%TYPENP%(arena, capacity);
     memcpy(a->items, array, sizeof(%TYPE%) * len);
     a->length = len;
 
     return a;
 }
 
-Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
+struct Result_%TYPENP% get_%TYPENP%(struct Array_%TYPENP%* array, u32 i)
 {
     if (i < 0 || i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
     return success_%TYPENP%(array->items[i]);
 }
 
-Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
+Error set_%TYPENP%(struct Array_%TYPENP%* array, u32 i, %TYPE% val)
 {
     if (i < 0 || i >= array->length)
         return ERROR_OUT_OF_BOUNDS;
@@ -277,7 +271,7 @@ Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
     return SUCCESS;
 }
 
-void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
+void push_%TYPENP%(struct Arena* arena, struct Array_%TYPENP%* array, %TYPE% element)
 {
     array->length++;
     if (array->length >= array->capacity) {
@@ -287,14 +281,14 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
     array->items[array->length - 1] = element;
 }
 
-void pop_%TYPENP%(Array_%TYPENP%* array)
+void pop_%TYPENP%(struct Array_%TYPENP%* array)
 {
     array->length--;
     if (array->length < 0)
         array->length = 0;
 }
 
-void clear_%TYPENP%(Array_%TYPENP%* array)
+void clear_%TYPENP%(struct Array_%TYPENP%* array)
 {
     memset(array->items, 0, sizeof(%TYPE%) * array->length);
     array->length = 0;
@@ -303,7 +297,7 @@ void clear_%TYPENP%(Array_%TYPENP%* array)
 // END ZARRAY IMPLEMENTATION
 
 // BEGIN ZSTRING IMPLEMENTATION
-String* newStringc(Arena* arena, char* str, u32 len)
+String* newStringc(struct Arena* arena, char* str, u32 len)
 {
     String* s = allocate(arena, sizeof(String));
     s->length = len;
@@ -312,7 +306,7 @@ String* newStringc(Arena* arena, char* str, u32 len)
     return s;
 }
 
-String* newStrings(Arena* arena, String* str)
+String* newStrings(struct Arena* arena, String* str)
 {
     String* s = allocate(arena, sizeof(String));
     s->chars = allocate(arena, sizeof(char) * str->length);
@@ -329,7 +323,7 @@ i32 cmp(String* str1, String* str2)
     return res;
 }
 
-char* cstr(Arena* arena, String* str)
+char* cstr(struct Arena* arena, String* str)
 {
     char* res = allocate(arena, sizeof(char) * str->length + 1);
     memcpy(res, str->chars, str->length);
@@ -337,7 +331,7 @@ char* cstr(Arena* arena, String* str)
     return res;
 }
 
-Result_char getChar(String* str, u32 i)
+struct Result_char getChar(String* str, u32 i)
 {
     if (i < 0 || i >= str->length)
         return fail_char(ERROR_OUT_OF_BOUNDS);

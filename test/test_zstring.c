@@ -2,7 +2,7 @@
 
 TEST(String_cmp)
 {
-    Arena* a = newArena(KILOBYTES(16));
+    struct Arena* a = newArena(KILOBYTES(16));
 
     char* teststr = "hello";
     String* s1 = newStringc(a, teststr, strlen(teststr));
@@ -18,7 +18,7 @@ clean:
 
 TEST(String_cstr_strncmp)
 {
-    Arena* a = newArena(KILOBYTES(16));
+    struct Arena* a = newArena(KILOBYTES(16));
 
     char* teststr = "hello";
     String* s = newStringc(a, teststr, strlen(teststr));
@@ -30,7 +30,7 @@ clean:
 
 TEST(String_getChar)
 {
-    Arena* a = newArena(KILOBYTES(16));
+    struct Arena* a = newArena(KILOBYTES(16));
 
     char* teststr = "hello";
     String* s = newStringc(a, teststr, strlen(teststr));
