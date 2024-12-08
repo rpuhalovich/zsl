@@ -5,19 +5,7 @@
 #include "ztypes.h"
 #include "zresult.h"
 
-%INCLUDE%
-
-%FORWARD%
-
-typedef i32 Error;
-
 %TEMPLATE_BEGIN%
-struct _Array_%TYPENP%;
-typedef struct _Array_%TYPENP% Array_%TYPENP%;
-
-struct _Result_%TYPENP%;
-typedef struct _Result_%TYPENP% Result_%TYPENP%;
-
 typedef struct _Array_%TYPENP% {
     %TYPE%* items;
     u32 length;
