@@ -26,6 +26,7 @@ typedef struct _Array_%TYPENP% {
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
 Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
+Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length);
 Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
 Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
