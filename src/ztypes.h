@@ -37,7 +37,7 @@ typedef int64_t i64;
     #define LOG(...)
 #endif
 
-#define STRUCT_FORWARD(type)                                                                       \
+#define FORWARD(type)                                                                              \
     struct _##type;                                                                                \
     typedef struct _##type type;
 

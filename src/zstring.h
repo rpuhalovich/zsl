@@ -2,11 +2,10 @@
 #define ZSTRING_H
 
 #include "zarena.h"
-#include "zarray.h"
 #include "zresult.h"
 #include "ztypes.h"
 
-STRUCT_FORWARD(Result_char)
+FORWARD(Result_char)
 
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
 typedef struct _String {
