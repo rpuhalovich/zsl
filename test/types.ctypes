@@ -1,5 +1,4 @@
-FORWARD Button
-INCLUDE "button.h"
+FORWARD sButton Button
 TYPE Button
 TYPE bool
 TYPE char

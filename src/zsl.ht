@@ -1,0 +1,304 @@
+#ifndef ZSL_H
+#define ZSL_H
+
+#include <string.h>
+#include "ztypes.h"
+
+%FORWARD%
+
+// BEGIN ZARENA
+#define KILOBYTES(number) ((number) * 1024ull)
+#define MEGABYTES(number) (KILOBYTES(number) * 1024ull)
+#define GIGABYTES(number) (MEGABYTES(number) * 1024ull)
+#define TERABYTES(number) (GIGABYTES(number) * 1024ull)
+
+// clang-format off
+// macos memory management: https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/AboutMemory.html
+// Untangling Lifetimes - The Arena Allocator: https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator
+// clang-format on
+
+typedef struct {
+    u8* memory;
+    u8* ptr;
+    u64 capacity;
+} Arena;
+
+Arena* newArena(u64 size);
+Arena* newArenaa(Arena* arena, u64 size);
+void* allocate(Arena* a, u64 size);
+void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize);
+void clear(Arena* a);
+void freeArena(Arena* a);
+// END ZARENA
+
+// BEGIN ZRESULT
+typedef enum {
+    SUCCESS = 0,
+    ERROR_UNEXPECTED,
+    ERROR_OUT_OF_BOUNDS
+} ErrorTypeInternal;
+
+typedef i32 Error;
+
+%TEMPLATE_BEGIN%
+typedef struct sResult_%TYPENP% {
+    %TYPE% result;
+    Error error;
+} Result_%TYPENP%;
+
+Result_%TYPENP% fail_%TYPENP%(Error error);
+Result_%TYPENP% success_%TYPENP%(%TYPE% result);
+%TEMPLATE_END%
+// END ZRESULT
+
+// BEGIN ZARRAY
+%TEMPLATE_BEGIN%
+typedef struct sArray_%TYPENP% {
+    %TYPE%* items;
+    u32 length;
+    u32 capacity;
+} Array_%TYPENP%;
+
+Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
+Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length);
+Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
+Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
+void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
+void pop_%TYPENP%(Array_%TYPENP%* array);
+void clear_%TYPENP%(Array_%TYPENP%* array);
+%TEMPLATE_END%
+// END ZARRAY
+
+// BEGIN ZSTRING
+FORWARD(sResult_char, Result_char)
+
+// https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
+typedef struct sString {
+    char* chars;
+    u32 length;
+} String;
+
+String* newStringc(Arena* arena, char* str, u32 len);
+String* newStrings(Arena* arena, String* str);
+i32 cmp(String* str1, String* str2);
+char* cstr(Arena* arena, String* str);
+Result_char getChar(String* str, u32 i);
+// END ZSTRING
+
+#endif // ZSL_H
+
+#ifdef ZSL_IMPLEMENTATION
+
+// BEGIN ZARENA
+Arena* newArena(u64 size)
+{
+    Arena* a = malloc(sizeof(Arena));
+    memset(a, 0, sizeof(Arena));
+
+    a->memory = malloc(size);
+    memset(a->memory, 0, size);
+
+    a->ptr = a->memory;
+    a->capacity = size;
+
+    return a;
+}
+
+Arena* newArenaa(Arena* arena, u64 size)
+{
+    Arena* a = allocate(arena, size);
+    memset(a, 0, sizeof(Arena));
+
+    a->memory = allocate(arena, size);
+    memset(a->memory, 0, size);
+
+    a->ptr = a->memory;
+    a->capacity = size;
+
+    return a;
+}
+
+void* allocate(Arena* a, u64 size)
+{
+    assert(a->ptr + size < a->memory + a->capacity);
+
+    u8* ptr = a->ptr;
+    a->ptr += size;
+
+    return ptr;
+}
+
+void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
+{
+    assert(a->ptr + newsize < a->memory + a->capacity);
+
+    void* newptr = a->ptr;
+    a->ptr += newsize;
+    memcpy(newptr, ptr, oldsize);
+
+    return newptr;
+}
+
+void freeArena(Arena* a)
+{
+    free(a->memory);
+    free(a);
+}
+
+void clear(Arena* a)
+{
+    memset(a->memory, 0, a->capacity);
+    a->ptr = a->memory;
+}
+// END ZARENA
+
+// BEGIN ZRESULT
+%TEMPLATE_BEGIN%
+Result_%TYPENP% fail_%TYPENP%(Error error)
+{
+    Result_%TYPENP% failResult = {0};
+    failResult.error = error;
+    return failResult;
+}
+
+Result_%TYPENP% success_%TYPENP%(%TYPE% result)
+{
+    Result_%TYPENP% successResult = {0};
+    successResult.result = result;
+    return successResult;
+}
+%TEMPLATE_END%
+// END ZRESULT
+
+// BEGIN ZARRAY
+%TEMPLATE_BEGIN%
+Array_%TYPENP%* newArray_%TYPENP%(Arena* arena)
+{
+    return newArrayc_%TYPENP%(arena, 16);
+}
+
+Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity)
+{
+    u32 b2capacity = 1;
+    while (b2capacity < capacity)
+        b2capacity *= 2;
+
+    Array_%TYPENP%* a = allocate(arena, sizeof(Array_%TYPENP%));
+    a->length = 0;
+    a->capacity = b2capacity;
+    a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
+    return a;
+}
+
+Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length)
+{
+    u32 capacity = 1;
+    while (capacity < length)
+        capacity *= 2;
+
+    Array_%TYPENP%* a = allocate(arena, sizeof(Array_%TYPENP%));
+    a->length = length;
+    a->capacity = capacity;
+    a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
+    return a;
+}
+
+Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len)
+{
+    u32 capacity = 1;
+    while (capacity < len)
+        capacity *= 2;
+
+    Array_%TYPENP%* a = newArrayc_%TYPENP%(arena, capacity);
+    memcpy(a->items, array, sizeof(%TYPE%) * len);
+    a->length = len;
+
+    return a;
+}
+
+Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
+{
+    if (i < 0 || i >= array->length)
+        return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
+    return success_%TYPENP%(array->items[i]);
+}
+
+Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
+{
+    if (i < 0 || i >= array->length)
+        return ERROR_OUT_OF_BOUNDS;
+    array->items[i] = val;
+    return SUCCESS;
+}
+
+void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
+{
+    array->length++;
+    if (array->length >= array->capacity) {
+        array->items = reallocate(arena, array->items, array->capacity, array->capacity * (u64)2);
+        array->capacity *= (u64)2;
+    }
+    array->items[array->length - 1] = element;
+}
+
+void pop_%TYPENP%(Array_%TYPENP%* array)
+{
+    array->length--;
+    if (array->length < 0)
+        array->length = 0;
+}
+
+void clear_%TYPENP%(Array_%TYPENP%* array)
+{
+    memset(array->items, 0, sizeof(%TYPE%) * array->length);
+    array->length = 0;
+}
+%TEMPLATE_END%
+// END ZARRAY
+
+// BEGIN ZSTRING
+String* newStringc(Arena* arena, char* str, u32 len)
+{
+    String* s = allocate(arena, sizeof(String));
+    s->length = len;
+    s->chars = allocate(arena, sizeof(char) * s->length);
+    memcpy(s->chars, str, s->length);
+    return s;
+}
+
+String* newStrings(Arena* arena, String* str)
+{
+    String* s = allocate(arena, sizeof(String));
+    s->chars = allocate(arena, sizeof(char) * str->length);
+    s->length = str->length;
+    memcpy(s->chars, str->chars, str->length);
+    return s;
+}
+
+i32 cmp(String* str1, String* str2)
+{
+    u32 s1len = str1->length;
+    u32 s2len = str2->length;
+    i32 res = strncmp(str1->chars, str2->chars, s1len < s2len ? s1len : s2len);
+    return res;
+}
+
+char* cstr(Arena* arena, String* str)
+{
+    char* res = allocate(arena, sizeof(char) * str->length + 1);
+    memcpy(res, str->chars, str->length);
+    res[str->length] = '\0';
+    return res;
+}
+
+Result_char getChar(String* str, u32 i)
+{
+    if (i < 0 || i >= str->length)
+        return fail_char(ERROR_OUT_OF_BOUNDS);
+    return success_char(str->chars[i]);
+}
+// END ZSTRING
+
+#endif // ZSL_IMPLEMENTATION

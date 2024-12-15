@@ -31,6 +31,23 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #endif
 
+typedef struct {
+    f32 x;
+    f32 y;
+} v2f;
+
+typedef struct {
+    i32 x;
+    i32 y;
+} v2i;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 width;
+    f32 height;
+} rec;
+
 #ifdef ZDEBUG
     #define LOG(...) printf(__VA_ARGS__)
 #else

@@ -1,13 +1,12 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include <zstring.h>
 #include <ztypes.h>
 
-FORWARD(String)
-FORWARD(Result_bool)
+FORWARD(sString, String)
+FORWARD(sResult_bool, Result_bool)
 
-typedef struct _Button {
+typedef struct sButton {
     u32 id;
     String* string;
 } Button;
