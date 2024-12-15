@@ -1,6 +1,3 @@
-FORWARD Button
-INCLUDE "button.h"
-TYPE Button
 TYPE bool
 TYPE char
 TYPE i32
