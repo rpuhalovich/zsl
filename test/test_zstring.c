@@ -1,5 +1,3 @@
-#include <zsl.h>
-
 TEST(String_cmp)
 {
     Arena* a = newArena(KILOBYTES(16));
