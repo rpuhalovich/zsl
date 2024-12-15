@@ -1,11 +1,13 @@
 #ifndef ZSL_H
 #define ZSL_H
 
-#include <string.h>
-
 %FORWARD%
 
+struct sString;
+typedef struct sString String;
+
 // BEGIN ZTYPES
+#include <string.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -137,8 +139,6 @@ void clear_%TYPENP%(Array_%TYPENP%* array);
 // END ZARRAY
 
 // BEGIN ZSTRING
-FORWARD(sResult_char, Result_char)
-
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
 typedef struct sString {
     char* chars;
