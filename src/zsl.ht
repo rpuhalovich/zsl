@@ -87,8 +87,6 @@ char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
 // END ZSTRING
 
-#endif // ZSL_H
-
 #ifdef ZSL_IMPLEMENTATION
 
 // BEGIN ZARENA
@@ -302,3 +300,5 @@ Result_char getChar(String* str, u32 i)
 // END ZSTRING
 
 #endif // ZSL_IMPLEMENTATION
+
+#endif // ZSL_H

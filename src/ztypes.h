@@ -48,6 +48,13 @@ typedef struct {
     f32 height;
 } rec;
 
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} color;
+
 #ifdef ZDEBUG
     #define LOG(...) printf(__VA_ARGS__)
 #else

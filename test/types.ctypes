@@ -1,5 +1,3 @@
-FORWARD sButton Button
-TYPE Button
 TYPE bool
 TYPE char
 TYPE i32
