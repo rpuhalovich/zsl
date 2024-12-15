@@ -5,10 +5,10 @@
 #include "zresult.h"
 #include "ztypes.h"
 
-FORWARD(Result_char)
+FORWARD(sResult_char, Result_char)
 
 // https://stackoverflow.com/questions/5290182/how-many-bytes-does-one-unicode-character-take
-typedef struct _String {
+typedef struct sString {
     char* chars;
     u32 length;
 } String;

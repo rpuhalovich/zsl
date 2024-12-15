@@ -5,8 +5,10 @@
 #include "ztypes.h"
 #include "zresult.h"
 
+%FORWARD%
+
 %TEMPLATE_BEGIN%
-typedef struct _Array_%TYPENP% {
+typedef struct sArray_%TYPENP% {
     %TYPE%* items;
     u32 length;
     u32 capacity;
