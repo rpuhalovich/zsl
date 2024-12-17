@@ -148,6 +148,7 @@ typedef struct sString {
 String* newStringc(Arena* arena, char* str, u32 len);
 String* newStrings(Arena* arena, String* str);
 i32 cmp(String* str1, String* str2);
+String* cat(Arena* arena, String* str1, String* str2);
 char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
 // END ZSTRING
@@ -347,6 +348,18 @@ i32 cmp(String* str1, String* str2)
     u32 s2len = str2->length;
     i32 res = strncmp(str1->chars, str2->chars, s1len < s2len ? s1len : s2len);
     return res;
+}
+
+String* cat(Arena* arena, String* str1, String* str2)
+{
+    char* charString = allocate(arena, str1->length + str2->length);
+    memcpy(charString, str1->chars, str1->length);
+    memcpy(charString + str1->length, str2->chars, str2->length);
+
+    String* s = allocate(arena, sizeof(String));
+    s->chars = charString;
+    s->length = str1->length + str2->length;
+    return s;
 }
 
 char* cstr(Arena* arena, String* str)
