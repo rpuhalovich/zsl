@@ -221,16 +221,17 @@ void clear(Arena* a)
 %TEMPLATE_BEGIN%
 Result_%TYPENP% fail_%TYPENP%(Error error)
 {
-    Result_%TYPENP% failResult = {0};
-    failResult.error = error;
-    return failResult;
+    Result_%TYPENP% res = {0};
+    res.error = error;
+    return res;
 }
 
 Result_%TYPENP% success_%TYPENP%(%TYPE% result)
 {
-    Result_%TYPENP% successResult = {0};
-    successResult.result = result;
-    return successResult;
+    Result_%TYPENP% res = {0};
+    res.result = result;
+    res.error = SUCCESS;
+    return res;
 }
 %TEMPLATE_END%
 // END ZRESULT
