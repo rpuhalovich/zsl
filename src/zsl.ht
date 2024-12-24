@@ -114,6 +114,7 @@ typedef struct sResult_%TYPENP% {
 } Result_%TYPENP%;
 
 Result_%TYPENP% fail_%TYPENP%(Error error);
+Result_%TYPENP% failcb_%TYPENP%(Error error, Arena* arena, %TYPE% (*cb)(Arena* arena));
 Result_%TYPENP% success_%TYPENP%(%TYPE% result);
 %TEMPLATE_END%
 // END ZRESULT
@@ -131,6 +132,7 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
 Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length);
 Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
 Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
+Result_%TYPENP% getcb_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% (*cb)(Arena* arena));
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 void pop_%TYPENP%(Array_%TYPENP%* array);
@@ -227,6 +229,14 @@ Result_%TYPENP% fail_%TYPENP%(Error error)
     return res;
 }
 
+Result_%TYPENP% failcb_%TYPENP%(Error error, Arena* arena, %TYPE% (*cb)(Arena* arena))
+{
+    Result_%TYPENP% res = {0};
+    res.result = cb(arena);
+    res.error = error;
+    return res;
+}
+
 Result_%TYPENP% success_%TYPENP%(%TYPE% result)
 {
     Result_%TYPENP% res = {0};
@@ -287,6 +297,13 @@ Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
     if (i < 0 || i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
+    return success_%TYPENP%(array->items[i]);
+}
+
+Result_%TYPENP% getcb_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% (*cb)(Arena* arena))
+{
+    if (i < 0 || i >= array->length)
+        return failcb_%TYPENP%(ERROR_OUT_OF_BOUNDS, arena, cb);
     return success_%TYPENP%(array->items[i]);
 }
 
