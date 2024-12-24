@@ -51,9 +51,14 @@ typedef struct {
 typedef struct {
     f32 x;
     f32 y;
-    f32 width;
-    f32 height;
-} rec;
+    f32 z;
+} v3f;
+
+typedef struct {
+    i32 x;
+    i32 y;
+    i32 z;
+} v3i;
 
 typedef struct {
     u8 r;
@@ -61,6 +66,13 @@ typedef struct {
     u8 b;
     u8 a;
 } color;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 width;
+    f32 height;
+} rec;
 
 #ifdef ZDEBUG
     #define LOG(...) printf(__VA_ARGS__)
@@ -319,8 +331,8 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
 {
     array->length++;
     if (array->length >= array->capacity) {
-        array->items = reallocate(arena, array->items, array->capacity, array->capacity * (u64)2);
-        array->capacity *= (u64)2;
+        array->items = reallocate(arena, array->items, array->capacity, array->capacity * 2ull);
+        array->capacity *= 2ull;
     }
     array->items[array->length - 1] = element;
 }
