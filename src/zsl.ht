@@ -168,6 +168,7 @@ Result_char getChar(String* str, u32 i);
 // END ZSTRING
 
 #ifdef ZSL_IMPLEMENTATION
+#undef ZSL_IMPLEMENTATION
 
 // BEGIN ZARENA
 Arena* newArena(u64 size)
