@@ -1,4 +1,4 @@
-FORWARD Button
+FORWARD _Button Button
 INCLUDE "button.h"
 TYPE Button
 TYPE bool
