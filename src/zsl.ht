@@ -214,21 +214,15 @@ Arena* newArenaa(Arena* arena, u64 size)
 void* allocate(Arena* a, u64 size)
 {
   assert(a->ptr + size < a->memory + a->capacity);
-
   u8* ptr = a->ptr;
   a->ptr += size;
-
   return ptr;
 }
 
 void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
 {
-  assert(a->ptr + newsize < a->memory + a->capacity);
-
-  void* newptr = a->ptr;
-  a->ptr += newsize;
+  void* newptr = allocate(a, newsize);
   memcpy(newptr, ptr, oldsize);
-
   return newptr;
 }
 
@@ -346,7 +340,11 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
 {
   array->length++;
   if (array->length >= array->capacity) {
-    array->items = reallocate(arena, array->items, array->capacity, array->capacity * 2ull);
+    array->items = reallocate(
+      arena,
+      array->items,
+      sizeof(%TYPE%) * array->capacity,
+      sizeof(%TYPE%) * array->capacity * 2ull);
     array->capacity *= 2ull;
   }
   array->items[array->length - 1] = element;
