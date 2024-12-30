@@ -39,39 +39,27 @@ typedef int64_t i64;
 #endif
 
 typedef struct {
-  f32 x;
-  f32 y;
+  f32 x, y;
 } v2f;
 
 typedef struct {
-  i32 x;
-  i32 y;
+  i32 x, y;
 } v2i;
 
 typedef struct {
-  f32 x;
-  f32 y;
-  f32 z;
+  f32 x, y, z;
 } v3f;
 
 typedef struct {
-  i32 x;
-  i32 y;
-  i32 z;
+  i32 x, y, z;
 } v3i;
 
 typedef struct {
-  u8 r;
-  u8 g;
-  u8 b;
-  u8 a;
+  u8 r, g, b, a;
 } color;
 
 typedef struct {
-  f32 x;
-  f32 y;
-  f32 width;
-  f32 height;
+  f32 x, y, width, height;
 } rec;
 
 #ifdef ZDEBUG
