@@ -140,7 +140,10 @@ void calculate_(Arena* arena, LayoutNode* root)
       LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
       childNode->resultBounds_.x = layoutResult->bounds.x;
       childNode->resultBounds_.y = layoutResult->bounds.y + cury;
-      childNode->resultBounds_.width = layoutResult->bounds.width;
+
+      f32 resolvedChildWidth = childNode->style.width > 0.0f ? childNode->style.width : layoutResult->bounds.width;
+      childNode->resultBounds_.width = resolvedChildWidth;
+
       f32 resolvedChildHeight = childNode->style.height > 0.0f ? childNode->style.height : childHeight;
       childNode->resultBounds_.height = resolvedChildHeight;
       cury += resolvedChildHeight;
@@ -148,13 +151,29 @@ void calculate_(Arena* arena, LayoutNode* root)
   }
 
   if (root->style.flexDirection == FLEX_DIRECTION_ROW) {
-    f32 childWidth = layoutResult->bounds.width / root->children->length;
+    f32 styleWidth = 0.0f;
+    u32 styleWidthCount = 0;
     for (u32 i = 0; i < root->children->length; i++) {
       LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-      childNode->resultBounds_.x = layoutResult->bounds.x + childWidth * i;
+      if (childNode->style.width > 0.0f) {
+        styleWidth += childNode->style.width;
+        styleWidthCount++;
+      }
+    }
+
+    f32 curx = 0.0f;
+    f32 childWidth = (layoutResult->bounds.width - styleWidth) / (root->children->length - styleWidthCount);
+    for (u32 i = 0; i < root->children->length; i++) {
+      LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+      childNode->resultBounds_.x = layoutResult->bounds.x + curx;
       childNode->resultBounds_.y = layoutResult->bounds.y;
-      childNode->resultBounds_.width = childWidth;
-      childNode->resultBounds_.height = layoutResult->bounds.height;
+
+      f32 resolvedChildWidth = childNode->style.width > 0.0f ? childNode->style.width : childWidth;
+      childNode->resultBounds_.width = resolvedChildWidth;
+      curx += resolvedChildWidth;
+
+      f32 resolvedChildHeight = childNode->style.height > 0.0f ? childNode->style.height : layoutResult->bounds.height;
+      childNode->resultBounds_.height = resolvedChildHeight;
     }
   }
 
