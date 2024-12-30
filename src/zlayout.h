@@ -124,13 +124,26 @@ void calculate_(Arena* arena, LayoutNode* root)
 
   // calculate children bounds
   if (root->style.flexDirection == FLEX_DIRECTION_COLUMN) {
-    f32 childHeight = layoutResult->bounds.height / root->children->length;
+    f32 styleHeight = 0.0f;
+    u32 styleHeightCount = 0;
+    for (u32 i = 0; i < root->children->length; i++) {
+      LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+      if (childNode->style.height > 0.0f) {
+        styleHeight += childNode->style.height;
+        styleHeightCount++;
+      }
+    }
+
+    f32 cury = 0.0f;
+    f32 childHeight = (layoutResult->bounds.height - styleHeight) / (root->children->length - styleHeightCount);
     for (u32 i = 0; i < root->children->length; i++) {
       LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
       childNode->resultBounds_.x = layoutResult->bounds.x;
-      childNode->resultBounds_.y = layoutResult->bounds.y + childHeight * i;
+      childNode->resultBounds_.y = layoutResult->bounds.y + cury;
       childNode->resultBounds_.width = layoutResult->bounds.width;
-      childNode->resultBounds_.height = childHeight;
+      f32 resolvedChildHeight = childNode->style.height > 0.0f ? childNode->style.height : childHeight;
+      childNode->resultBounds_.height = resolvedChildHeight;
+      cury += resolvedChildHeight;
     }
   }
 
