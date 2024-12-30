@@ -3,6 +3,9 @@
 #define ZSL_IMPLEMENTATION
 #include <zsl.h>
 
+#define ZLAYOUT_IMPLEMENTATION
+#include <zlayout.h>
+
 #include "test_zarray.c"
 #include "test_zstring.c"
 

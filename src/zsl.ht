@@ -187,7 +187,7 @@ Arena* newArena(u64 size)
 
 Arena* newArenaa(Arena* arena, u64 size)
 {
-  Arena* a = allocate(arena, size);
+  Arena* a = allocate(arena, sizeof(Arena));
   memset(a, 0, sizeof(Arena));
 
   a->memory = allocate(arena, size);
@@ -201,7 +201,7 @@ Arena* newArenaa(Arena* arena, u64 size)
 
 void* allocate(Arena* a, u64 size)
 {
-  assert(a->ptr + size < a->memory + a->capacity);
+  assert(((a->ptr - a->memory) + size) < a->capacity);
   u8* ptr = a->ptr;
   a->ptr += size;
   return ptr;

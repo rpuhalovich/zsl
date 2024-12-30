@@ -1,3 +1,7 @@
+FORWARD sLayoutNode LayoutNode
+FORWARD tLayoutResult LayoutResult
+TYPE LayoutNode*
+TYPE LayoutResult*
 TYPE bool
 TYPE char
 TYPE i32

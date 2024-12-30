@@ -135,16 +135,19 @@ void calculate_(Arena* arena, LayoutNode* root)
     }
 
     f32 cury = 0.0f;
-    f32 childHeight = (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
+    f32 childHeight =
+        (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
     for (u32 i = 0; i < root->children->length; i++) {
       LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
       childNode->resultBounds_.x = newBounds.x;
       childNode->resultBounds_.y = newBounds.y + cury;
 
-      f32 resolvedChildWidth = childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
+      f32 resolvedChildWidth =
+          childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
       childNode->resultBounds_.width = resolvedChildWidth;
 
-      f32 resolvedChildHeight = childNode->style.height > 0.0f ? childNode->style.height : childHeight;
+      f32 resolvedChildHeight =
+          childNode->style.height > 0.0f ? childNode->style.height : childHeight;
       childNode->resultBounds_.height = resolvedChildHeight;
       cury += resolvedChildHeight;
     }
@@ -173,7 +176,8 @@ void calculate_(Arena* arena, LayoutNode* root)
       childNode->resultBounds_.width = resolvedChildWidth;
       curx += resolvedChildWidth;
 
-      f32 resolvedChildHeight = childNode->style.height > 0.0f ? childNode->style.height : newBounds.height;
+      f32 resolvedChildHeight =
+          childNode->style.height > 0.0f ? childNode->style.height : newBounds.height;
       childNode->resultBounds_.height = resolvedChildHeight;
     }
   }
