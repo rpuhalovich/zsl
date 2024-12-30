@@ -9,14 +9,14 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 int errorCount = 0;
-#define ASSERT(condition)                                                                          \
+#define ZASSERT(condition)                                                                         \
   if (!(condition)) {                                                                              \
     printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);      \
     errorCount++;                                                                                  \
     return;                                                                                        \
   }
 
-#define ASSERTC(condition)                                                                         \
+#define ZASSERTC(condition)                                                                        \
   if (!(condition)) {                                                                              \
     printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);      \
     errorCount++;                                                                                  \
