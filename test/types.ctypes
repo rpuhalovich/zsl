@@ -1,3 +1,4 @@
 TYPE bool
 TYPE char
 TYPE i32
+TYPE u32

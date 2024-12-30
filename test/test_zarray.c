@@ -1,6 +1,6 @@
 #include <limits.h>
 
-TEST(get_push_get_pop_get_success)
+TEST(get_success)
 {
   Arena* a = newArena(KILOBYTES(16));
 
@@ -43,6 +43,20 @@ TEST(set_success)
   ASSERTC(SUCCESS == set_i32(arr, 1, 10));
   ASSERTC(10 == get_i32(arr, 1).result);
   ASSERTC(ERROR_OUT_OF_BOUNDS == set_i32(arr, INT_MAX, 1));
+
+clean:
+  freeArena(a);
+}
+
+TEST(push_many_success)
+{
+  Arena* a = newArena(KILOBYTES(16));
+
+  Array_u32* arr = newArray_u32(a);
+  for (u32 i = 0; i < 128; i++)
+    push_u32(a, arr, i);
+  ASSERTC(arr->length == 128);
+  ASSERTC(arr->capacity == 256);
 
 clean:
   freeArena(a);
