@@ -165,6 +165,8 @@ i32 cmp(String* str1, String* str2);
 String* cat(Arena* arena, String* str1, String* str2);
 char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
+
+#define newStringcs(arena, str) newStringc(arena, str, strlen(str))
 // END ZSTRING
 
 #ifdef ZSL_IMPLEMENTATION
