@@ -33,22 +33,22 @@ ZTestContext zTestContext;
 // Taken from: <https://github.com/jasmcaus/tau>
 // Execute scope underneath before main function exection
 #if defined(_MSC_VER)
-  #if defined(_WIN64)
-    #define ZSL_SYMBOL_PREFIX
-  #else
-    #define ZSL_SYMBOL_PREFIX "_"
-  #endif // _WIN64
-
-  #pragma section(".CRT$XCU", read)
-  #define ZSL_TEST_INITIALIZER(f)                                                                  \
-    static void __cdecl f(void);                                                                   \
-    __pragma(comment(linker, "/include:" ZSL_SYMBOL_PREFIX #f "_")) ZSL_C_FUNC                     \
-        __declspec(allocate(".CRT$XCU")) void(__cdecl * f##_)(void) = f;                           \
-    static void __cdecl f(void)
+#if defined(_WIN64)
+#define ZSL_SYMBOL_PREFIX
 #else
-  #define ZSL_TEST_INITIALIZER(f)                                                                  \
-    static void f(void) __attribute__((constructor));                                              \
-    static void f(void)
+#define ZSL_SYMBOL_PREFIX "_"
+#endif // _WIN64
+
+#pragma section(".CRT$XCU", read)
+#define ZSL_TEST_INITIALIZER(f)                                                                    \
+  static void __cdecl f(void);                                                                     \
+  __pragma(comment(linker, "/include:" ZSL_SYMBOL_PREFIX #f "_")) ZSL_C_FUNC                       \
+      __declspec(allocate(".CRT$XCU")) void(__cdecl * f##_)(void) = f;                             \
+  static void __cdecl f(void)
+#else
+#define ZSL_TEST_INITIALIZER(f)                                                                    \
+  static void f(void) __attribute__((constructor));                                                \
+  static void f(void)
 #endif // _MSC_VER
 
 #define TEST(testName)                                                                             \

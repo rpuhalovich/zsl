@@ -5,9 +5,7 @@
 
 typedef enum {
   FLEX_DIRECTION_COLUMN = 0,
-  FLEX_DIRECTION_COLUMN_REVERSE,
-  FLEX_DIRECTION_ROW,
-  FLEX_DIRECTION_ROW_REVERSE
+  FLEX_DIRECTION_ROW
 } FlexDirection;
 
 typedef enum {
@@ -90,20 +88,61 @@ LayoutResult* newLayoutResult(Arena* arena)
 
 void calculate_(Arena* arena, LayoutNode* root)
 {
+  // calculate root margin
+  rec newBounds = root->resultBounds_;
+
+  if (root->style.margin > 0.0f) {
+    newBounds.x = root->resultBounds_.x + root->style.margin;
+    newBounds.y = root->resultBounds_.y + root->style.margin;
+    newBounds.width = root->resultBounds_.width - root->style.margin * 2;
+    newBounds.height = root->resultBounds_.height - root->style.margin * 2;
+  } else {
+    if (root->style.marginLeft > 0.0f) {
+      newBounds.x = root->resultBounds_.x + root->style.marginLeft;
+      newBounds.width = root->resultBounds_.width - root->style.marginLeft;
+    }
+
+    if (root->style.marginRight > 0.0f) {
+      newBounds.width = root->resultBounds_.width - root->style.marginRight;
+    }
+
+    if (root->style.marginTop > 0.0f) {
+      newBounds.y = root->resultBounds_.y + root->style.marginTop;
+      newBounds.height = root->resultBounds_.height - root->style.marginTop;
+    }
+
+    if (root->style.marginBottom > 0.0f) {
+      newBounds.height = root->resultBounds_.height - root->style.marginBottom;
+    }
+  }
+
+  // add root to calculated values
   LayoutResult* layoutResult = newLayoutResult(arena);
   layoutResult->id = root->id;
-  layoutResult->bounds = root->resultBounds_;
+  layoutResult->bounds = newBounds;
   push_pLayoutResult(arena, calculatedValues_, layoutResult);
 
   // calculate children bounds
-  f32 childHeight = layoutResult->bounds.height / root->children->length;
-  for (u32 i = 0; i < root->children->length; i++) {
-    LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+  if (root->style.flexDirection == FLEX_DIRECTION_COLUMN) {
+    f32 childHeight = layoutResult->bounds.height / root->children->length;
+    for (u32 i = 0; i < root->children->length; i++) {
+      LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+      childNode->resultBounds_.x = layoutResult->bounds.x;
+      childNode->resultBounds_.y = layoutResult->bounds.y + childHeight * i;
+      childNode->resultBounds_.width = layoutResult->bounds.width;
+      childNode->resultBounds_.height = childHeight;
+    }
+  }
 
-    childNode->resultBounds_.width = layoutResult->bounds.width;
-    childNode->resultBounds_.height = childHeight;
-    childNode->resultBounds_.x = layoutResult->bounds.x;
-    childNode->resultBounds_.y = layoutResult->bounds.y + childHeight * i;
+  if (root->style.flexDirection == FLEX_DIRECTION_ROW) {
+    f32 childWidth = layoutResult->bounds.width / root->children->length;
+    for (u32 i = 0; i < root->children->length; i++) {
+      LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+      childNode->resultBounds_.x = layoutResult->bounds.x + childWidth * i;
+      childNode->resultBounds_.y = layoutResult->bounds.y;
+      childNode->resultBounds_.width = childWidth;
+      childNode->resultBounds_.height = layoutResult->bounds.height;
+    }
   }
 
   // recurse into children
