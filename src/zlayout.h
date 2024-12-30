@@ -54,72 +54,31 @@ Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root);
 #ifdef ZLAYOUT_IMPLEMENTATION
 #undef ZLAYOUT_IMPLEMENTATION
 
-#include <yoga/Yoga.h>
-
 static LayoutResult* newLayoutResult(Arena* arena);
-static rec toRec(YGNodeRef node);
-static void calculate_(Arena* arena, LayoutNode* root, f32 leftOffset, f32 topOffset);
+static void calculate_(Arena* arena, LayoutNode* root);
 
 Array_pLayoutResult* calculatedValues_;
 
 typedef struct sLayoutNode {
   Array_pLayoutNode* children;
-  YGNodeRef node;
   LayoutStyle style;
   i32 id;
-} LayoutNode;
 
-rec toRec(YGNodeRef node)
-{
-  rec res = (rec){
-    YGNodeLayoutGetLeft(node),
-    YGNodeLayoutGetTop(node),
-    YGNodeLayoutGetWidth(node),
-    YGNodeLayoutGetHeight(node),
-  };
-  return res;
-}
+  rec resultBounds_;
+} LayoutNode;
 
 LayoutNode* newLayoutNode(Arena* arena, i32 id, LayoutStyle style)
 {
   LayoutNode* ln = allocate(arena, sizeof(LayoutNode));
   ln->children = newArray_pLayoutNode(arena);
   ln->id = id;
-  ln->node = YGNodeNew();
-
-  if (style.width)
-    YGNodeStyleSetWidth(ln->node, style.width);
-  if (style.height)
-    YGNodeStyleSetHeight(ln->node, style.height);
-
-  if (style.flexGrow)
-    YGNodeStyleSetFlexGrow(ln->node, style.flexGrow);
-  if (style.flexShrink)
-    YGNodeStyleSetFlexShrink(ln->node, style.flexShrink);
-  if (style.flexDirection)
-    YGNodeStyleSetFlexDirection(ln->node, (YGFlexDirection)style.flexDirection);
-
-  if (style.margin)
-    YGNodeStyleSetMargin(ln->node, YGEdgeAll, style.margin);
-  if (style.marginTop)
-    YGNodeStyleSetMargin(ln->node, YGEdgeTop, style.marginTop);
-  if (style.marginBottom)
-    YGNodeStyleSetMargin(ln->node, YGEdgeBottom, style.marginBottom);
-  if (style.marginLeft)
-    YGNodeStyleSetMargin(ln->node, YGEdgeLeft, style.marginLeft);
-  if (style.marginRight)
-    YGNodeStyleSetMargin(ln->node, YGEdgeRight, style.marginRight);
-
-  if (style.gap)
-    YGNodeStyleSetGap(ln->node, YGGutterAll, style.gap);
-
+  ln->style = style;
   return ln;
 }
 
 LayoutNode* addChild(Arena* arena, LayoutNode* parent, i32 id, LayoutStyle style)
 {
   LayoutNode* newNode = newLayoutNode(arena, id, style);
-  YGNodeInsertChild(parent->node, newNode->node, parent->children->length);
   push_pLayoutNode(arena, parent->children, newNode);
   return newNode;
 }
@@ -129,44 +88,42 @@ LayoutResult* newLayoutResult(Arena* arena)
   return allocate(arena, sizeof(LayoutResult));
 }
 
-void calculate_(Arena* arena, LayoutNode* root, f32 leftOffset, f32 topOffset)
+void calculate_(Arena* arena, LayoutNode* root)
 {
-  rec offsetRoot = toRec(root->node);
-  if (offsetRoot.x <= leftOffset)
-    offsetRoot.x += leftOffset;
-  if (offsetRoot.y <= topOffset)
-    offsetRoot.y += topOffset;
-
   LayoutResult* layoutResult = newLayoutResult(arena);
   layoutResult->id = root->id;
-  layoutResult->bounds = offsetRoot;
+  layoutResult->bounds = root->resultBounds_;
   push_pLayoutResult(arena, calculatedValues_, layoutResult);
 
+  // calculate children bounds
+  f32 childHeight = layoutResult->bounds.height / root->children->length;
+  for (u32 i = 0; i < root->children->length; i++) {
+    LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+
+    childNode->resultBounds_.width = layoutResult->bounds.width;
+    childNode->resultBounds_.height = childHeight;
+    childNode->resultBounds_.x = layoutResult->bounds.x;
+    childNode->resultBounds_.y = layoutResult->bounds.y + childHeight * i;
+  }
+
+  // recurse into children
   for (u32 i = 0; i < root->children->length; i++) {
     Result_pLayoutNode node = get_pLayoutNode(root->children, i);
     assert(node.error == SUCCESS);
-    calculate_(arena, node.result, offsetRoot.x, offsetRoot.y);
+    calculate_(arena, node.result);
   }
 }
 
 Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root)
 {
-  Arena* scratch = newArena(KILOBYTES(16));
+  root->resultBounds_.x = 0.0f;
+  root->resultBounds_.y = 0.0f;
+  root->resultBounds_.width = root->style.width;
+  root->resultBounds_.height = root->style.height;
 
-  calculatedValues_ = newArray_pLayoutResult(scratch);
-  rec rootBounds = toRec(root->node);
-  YGNodeCalculateLayout(root->node, rootBounds.width, rootBounds.height, YGDirectionLTR);
-  calculate_(scratch, root, 0.0f, 0.0f);
-
-  Array_pLayoutResult* res = newArrayl_pLayoutResult(arena, calculatedValues_->length);
-  for (u32 i = 0; i < calculatedValues_->length; i++) {
-    res->items[i] = allocate(arena, sizeof(LayoutResult));
-    memcpy(res->items[i], calculatedValues_->items[i], sizeof(LayoutResult));
-  }
-
-  YGNodeFreeRecursive(root->node);
-  freeArena(scratch);
-  return res;
+  calculatedValues_ = newArray_pLayoutResult(arena);
+  calculate_(arena, root);
+  return calculatedValues_;
 }
 
 #endif // ZLAYOUT_IMPLEMENTATION
