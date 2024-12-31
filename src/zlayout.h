@@ -4,17 +4,22 @@
 #include <zsl.h>
 
 typedef enum {
-    FLEX_DIRECTION_COLUMN = 0,
-    FLEX_DIRECTION_ROW
+    // FIXME: weird behaviour cause by this
+    // FLEXDIRECTION_BEGIN = 0,
+    FLEXDIRECTION_COLUMN,
+    FLEXDIRECTION_ROW,
+    // FLEXDIRECTION_END
 } FlexDirection;
 
 typedef enum {
-    JUSTIFY_FLEX_START = 0,
-    JUSTIFY_CENTER,
-    JUSTIFY_FLEX_END,
-    JUSTIFY_SPACE_BETWEEN,
-    JUSTIFY_SPACE_AROUND,
-    JUSTIFY_SPACE_EVENLY
+    JUSTIFYCONTENT_BEGIN = 0,
+    JUSTIFYCONTENT_FLEX_START,
+    JUSTIFYCONTENT_CENTER,
+    JUSTIFYCONTENT_FLEX_END,
+    JUSTIFYCONTENT_SPACE_BETWEEN,
+    JUSTIFYCONTENT_SPACE_AROUND,
+    JUSTIFYCONTENT_SPACE_EVENLY,
+    JUSTIFYCONTENT_END
 } JustifyContent;
 
 typedef struct {
@@ -102,18 +107,16 @@ void calculate_(Arena* arena, LayoutNode* root)
             newBounds.width -= root->style.marginLeft;
         }
 
-        if (root->style.marginRight > 0.0f) {
+        if (root->style.marginRight > 0.0f)
             newBounds.width -= root->style.marginRight;
-        }
 
         if (root->style.marginTop > 0.0f) {
             newBounds.y += root->style.marginTop;
             newBounds.height -= root->style.marginTop;
         }
 
-        if (root->style.marginBottom > 0.0f) {
+        if (root->style.marginBottom > 0.0f)
             newBounds.height -= root->style.marginBottom;
-        }
     }
 
     // add root to calculated values
@@ -123,65 +126,70 @@ void calculate_(Arena* arena, LayoutNode* root)
     push_pLayoutResult(arena, calculatedValues_, layoutResult);
 
     // calculate children bounds
-    if (root->style.flexDirection == FLEX_DIRECTION_COLUMN) {
-        f32 styleHeight = 0.0f;
-        u32 styleHeightCount = 0;
-        for (u32 i = 0; i < root->children->length; i++) {
-            LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-            if (childNode->style.height > 0.0f) {
-                styleHeight += childNode->style.height;
-                styleHeightCount++;
+    switch (root->style.flexDirection) {
+        case (FLEXDIRECTION_COLUMN): {
+            f32 styleHeight = 0.0f;
+            u32 styleHeightCount = 0;
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+                if (childNode->style.height > 0.0f) {
+                    styleHeight += childNode->style.height;
+                    styleHeightCount++;
+                }
             }
-        }
 
-        f32 cury = 0.0f;
-        f32 childHeight =
-            (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
-        for (u32 i = 0; i < root->children->length; i++) {
-            LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-            childNode->resultBounds_.x = newBounds.x;
-            childNode->resultBounds_.y = newBounds.y + cury;
+            f32 cury = 0.0f;
+            f32 childHeight =
+                (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+                childNode->resultBounds_.x = newBounds.x;
+                childNode->resultBounds_.y = newBounds.y + cury;
 
-            f32 resolvedChildWidth =
-                childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
-            childNode->resultBounds_.width = resolvedChildWidth;
+                f32 resolvedChildWidth =
+                    childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
+                childNode->resultBounds_.width = resolvedChildWidth;
 
-            f32 resolvedChildHeight =
-                childNode->style.height > 0.0f ? childNode->style.height : childHeight;
-            childNode->resultBounds_.height = resolvedChildHeight;
-            cury += resolvedChildHeight;
-        }
-    }
-
-    if (root->style.flexDirection == FLEX_DIRECTION_ROW) {
-        f32 styleWidth = 0.0f;
-        u32 styleWidthCount = 0;
-        for (u32 i = 0; i < root->children->length; i++) {
-            LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-            if (childNode->style.width > 0.0f) {
-                styleWidth += childNode->style.width;
-                styleWidthCount++;
+                f32 resolvedChildHeight =
+                    childNode->style.height > 0.0f ? childNode->style.height : childHeight;
+                childNode->resultBounds_.height = resolvedChildHeight;
+                cury += resolvedChildHeight;
             }
-        }
+        } break;
 
-        f32 curx = 0.0f;
-        f32 childWidth =
-            (newBounds.width - styleWidth) / (root->children->length - styleWidthCount);
-        for (u32 i = 0; i < root->children->length; i++) {
-            LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+        case (FLEXDIRECTION_ROW): {
+            f32 styleWidth = 0.0f;
+            u32 styleWidthCount = 0;
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+                if (childNode->style.width > 0.0f) {
+                    styleWidth += childNode->style.width;
+                    styleWidthCount++;
+                }
+            }
 
-            childNode->resultBounds_.x = newBounds.x + curx;
-            childNode->resultBounds_.y = newBounds.y;
+            f32 curx = 0.0f;
+            f32 childWidth =
+                (newBounds.width - styleWidth) / (root->children->length - styleWidthCount);
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
 
-            f32 resolvedChildWidth =
-                childNode->style.width > 0.0f ? childNode->style.width : childWidth;
-            childNode->resultBounds_.width = resolvedChildWidth;
-            curx += resolvedChildWidth;
+                childNode->resultBounds_.x = newBounds.x + curx;
+                childNode->resultBounds_.y = newBounds.y;
 
-            f32 resolvedChildHeight =
-                childNode->style.height > 0.0f ? childNode->style.height : newBounds.height;
-            childNode->resultBounds_.height = resolvedChildHeight;
-        }
+                f32 resolvedChildWidth =
+                    childNode->style.width > 0.0f ? childNode->style.width : childWidth;
+                childNode->resultBounds_.width = resolvedChildWidth;
+                curx += resolvedChildWidth;
+
+                f32 resolvedChildHeight =
+                    childNode->style.height > 0.0f ? childNode->style.height : newBounds.height;
+                childNode->resultBounds_.height = resolvedChildHeight;
+            }
+        } break;
+
+        default:
+            break;
     }
 
     // recurse into children
