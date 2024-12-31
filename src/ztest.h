@@ -10,23 +10,25 @@
 
 int errorCount = 0;
 #define ZASSERT(condition)                                                                         \
-  if (!(condition)) {                                                                              \
-    printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);      \
-    errorCount++;                                                                                  \
-    return;                                                                                        \
-  }
+    if (!(condition)) {                                                                            \
+        printf(                                                                                    \
+            ANSI_COLOR_RED "    ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);   \
+        errorCount++;                                                                              \
+        return;                                                                                    \
+    }
 
 #define ZASSERTC(condition)                                                                        \
-  if (!(condition)) {                                                                              \
-    printf(ANSI_COLOR_RED "  ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);      \
-    errorCount++;                                                                                  \
-    goto clean;                                                                                    \
-  }
+    if (!(condition)) {                                                                            \
+        printf(                                                                                    \
+            ANSI_COLOR_RED "    ASSERTION FAILED %s:%d\n" ANSI_COLOR_RESET, __FILE__, __LINE__);   \
+        errorCount++;                                                                              \
+        goto clean;                                                                                \
+    }
 
 typedef struct {
-  void (*tests[10000])(void);
-  char* testNames[10000];
-  int numTests;
+    void (*tests[10000])(void);
+    char* testNames[10000];
+    int numTests;
 } ZTestContext;
 ZTestContext zTestContext;
 
@@ -41,57 +43,57 @@ ZTestContext zTestContext;
 
 #pragma section(".CRT$XCU", read)
 #define ZSL_TEST_INITIALIZER(f)                                                                    \
-  static void __cdecl f(void);                                                                     \
-  __pragma(comment(linker, "/include:" ZSL_SYMBOL_PREFIX #f "_")) ZSL_C_FUNC                       \
-      __declspec(allocate(".CRT$XCU")) void(__cdecl * f##_)(void) = f;                             \
-  static void __cdecl f(void)
+    static void __cdecl f(void);                                                                   \
+    __pragma(comment(linker, "/include:" ZSL_SYMBOL_PREFIX #f "_")) ZSL_C_FUNC                     \
+        __declspec(allocate(".CRT$XCU")) void(__cdecl * f##_)(void) = f;                           \
+    static void __cdecl f(void)
 #else
 #define ZSL_TEST_INITIALIZER(f)                                                                    \
-  static void f(void) __attribute__((constructor));                                                \
-  static void f(void)
+    static void f(void) __attribute__((constructor));                                              \
+    static void f(void)
 #endif // _MSC_VER
 
 #define TEST(testName)                                                                             \
-  static void _TEST_##testName(void);                                                              \
-  ZSL_TEST_INITIALIZER(_REGISTER_TEST_##testName)                                                  \
-  {                                                                                                \
-    int index = zTestContext.numTests++;                                                           \
-    zTestContext.tests[index] = &_TEST_##testName;                                                 \
-    const char* name = #testName;                                                                  \
-    zTestContext.testNames[index] = malloc(strlen(name) + 1);                                      \
-    strncpy(zTestContext.testNames[index], name, strlen(name) + 1);                                \
-  }                                                                                                \
-  void _TEST_##testName(void)
+    static void _TEST_##testName(void);                                                            \
+    ZSL_TEST_INITIALIZER(_REGISTER_TEST_##testName)                                                \
+    {                                                                                              \
+        int index = zTestContext.numTests++;                                                       \
+        zTestContext.tests[index] = &_TEST_##testName;                                             \
+        const char* name = #testName;                                                              \
+        zTestContext.testNames[index] = malloc(strlen(name) + 1);                                  \
+        strncpy(zTestContext.testNames[index], name, strlen(name) + 1);                            \
+    }                                                                                              \
+    void _TEST_##testName(void)
 
 static int zTestMain(void);
 inline int zTestMain(void)
 {
-  for (int i = 0; i < zTestContext.numTests; i++) {
-    printf(ANSI_COLOR_GREEN "RUN %s...\n" ANSI_COLOR_RESET, zTestContext.testNames[i]);
-    zTestContext.tests[i]();
-  }
-  printf("\n");
+    for (int i = 0; i < zTestContext.numTests; i++) {
+        printf(ANSI_COLOR_GREEN "RUN %s...\n" ANSI_COLOR_RESET, zTestContext.testNames[i]);
+        zTestContext.tests[i]();
+    }
+    printf("\n");
 
-  if (errorCount == 0)
-    printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);
-  else
-    printf(ANSI_COLOR_RED "FAIL\n" ANSI_COLOR_RESET);
+    if (errorCount == 0)
+        printf(ANSI_COLOR_GREEN "PASS\n" ANSI_COLOR_RESET);
+    else
+        printf(ANSI_COLOR_RED "FAIL\n" ANSI_COLOR_RESET);
 
-  printf("Test count: %d\n", zTestContext.numTests);
-  if (errorCount > 0)
-    printf("Fail count: %d\n", errorCount);
+    printf("Test count: %d\n", zTestContext.numTests);
+    if (errorCount > 0)
+        printf("Fail count: %d\n", errorCount);
 
-  for (int i = 0; i < zTestContext.numTests; i++)
-    free(zTestContext.testNames[i]);
+    for (int i = 0; i < zTestContext.numTests; i++)
+        free(zTestContext.testNames[i]);
 
-  return 0;
+    return 0;
 }
 
 #define ZTEST_MAIN()                                                                               \
-  ZTestContext zTestContext = {0};                                                                 \
-  int main(void)                                                                                   \
-  {                                                                                                \
-    return zTestMain();                                                                            \
-  }
+    ZTestContext zTestContext = {0};                                                               \
+    int main(void)                                                                                 \
+    {                                                                                              \
+        return zTestMain();                                                                        \
+    }
 
 #endif // ZTEST_H

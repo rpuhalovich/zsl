@@ -1,7 +1,7 @@
 # from: https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 Language: Cpp
 BasedOnStyle: LLVM
-IndentWidth: 2
+IndentWidth: 4
 IndentCaseLabels: true
 AccessModifierOffset: -4
 IndentAccessModifiers: false
