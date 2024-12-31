@@ -4,11 +4,10 @@
 #include <zsl.h>
 
 typedef enum {
-    // FIXME: weird behaviour cause by this
-    // FLEXDIRECTION_BEGIN = 0,
+    FLEXDIRECTION_BEGIN = 0,
     FLEXDIRECTION_COLUMN,
     FLEXDIRECTION_ROW,
-    // FLEXDIRECTION_END
+    FLEXDIRECTION_END
 } FlexDirection;
 
 typedef enum {
@@ -127,36 +126,6 @@ void calculate_(Arena* arena, LayoutNode* root)
 
     // calculate children bounds
     switch (root->style.flexDirection) {
-        case (FLEXDIRECTION_COLUMN): {
-            f32 styleHeight = 0.0f;
-            u32 styleHeightCount = 0;
-            for (u32 i = 0; i < root->children->length; i++) {
-                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-                if (childNode->style.height > 0.0f) {
-                    styleHeight += childNode->style.height;
-                    styleHeightCount++;
-                }
-            }
-
-            f32 cury = 0.0f;
-            f32 childHeight =
-                (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
-            for (u32 i = 0; i < root->children->length; i++) {
-                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
-                childNode->resultBounds_.x = newBounds.x;
-                childNode->resultBounds_.y = newBounds.y + cury;
-
-                f32 resolvedChildWidth =
-                    childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
-                childNode->resultBounds_.width = resolvedChildWidth;
-
-                f32 resolvedChildHeight =
-                    childNode->style.height > 0.0f ? childNode->style.height : childHeight;
-                childNode->resultBounds_.height = resolvedChildHeight;
-                cury += resolvedChildHeight;
-            }
-        } break;
-
         case (FLEXDIRECTION_ROW): {
             f32 styleWidth = 0.0f;
             u32 styleWidthCount = 0;
@@ -188,8 +157,35 @@ void calculate_(Arena* arena, LayoutNode* root)
             }
         } break;
 
-        default:
-            break;
+        default: {
+            f32 styleHeight = 0.0f;
+            u32 styleHeightCount = 0;
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+                if (childNode->style.height > 0.0f) {
+                    styleHeight += childNode->style.height;
+                    styleHeightCount++;
+                }
+            }
+
+            f32 cury = 0.0f;
+            f32 childHeight =
+                (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
+            for (u32 i = 0; i < root->children->length; i++) {
+                LayoutNode* childNode = get_pLayoutNode(root->children, i).result;
+                childNode->resultBounds_.x = newBounds.x;
+                childNode->resultBounds_.y = newBounds.y + cury;
+
+                f32 resolvedChildWidth =
+                    childNode->style.width > 0.0f ? childNode->style.width : newBounds.width;
+                childNode->resultBounds_.width = resolvedChildWidth;
+
+                f32 resolvedChildHeight =
+                    childNode->style.height > 0.0f ? childNode->style.height : childHeight;
+                childNode->resultBounds_.height = resolvedChildHeight;
+                cury += resolvedChildHeight;
+            }
+        } break;
     }
 
     // recurse into children
