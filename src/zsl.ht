@@ -80,10 +80,48 @@ typedef struct {
     #define ZLOG_ERROR(...)
 #endif
 
-#define FORWARD(s, t)                                                                                                                                                            \
-    struct s;                                                                                                                                                                                \
+#define FORWARD(s, t)\
+    struct s;\
     typedef struct s t;
 // END ZTYPES
+
+// BEGIN ZMATH
+#define MIN_PROTOTYPE_(t) t min_##t(t a, t b);
+MIN_PROTOTYPE_(u8)
+MIN_PROTOTYPE_(i8)
+MIN_PROTOTYPE_(u16)
+MIN_PROTOTYPE_(i16)
+MIN_PROTOTYPE_(u32)
+MIN_PROTOTYPE_(i32)
+MIN_PROTOTYPE_(u64)
+MIN_PROTOTYPE_(i64)
+MIN_PROTOTYPE_(f32)
+MIN_PROTOTYPE_(f64)
+
+#define MAX_PROTOTYPE_(t) t max_##t(t a, t b);
+MAX_PROTOTYPE_(u8)
+MAX_PROTOTYPE_(i8)
+MAX_PROTOTYPE_(u16)
+MAX_PROTOTYPE_(i16)
+MAX_PROTOTYPE_(u32)
+MAX_PROTOTYPE_(i32)
+MAX_PROTOTYPE_(u64)
+MAX_PROTOTYPE_(i64)
+MAX_PROTOTYPE_(f32)
+MAX_PROTOTYPE_(f64)
+
+#define CLAMP_PROTOTYPE_(t) t clamp_##t(t val, t min, t max);
+CLAMP_PROTOTYPE_(u8)
+CLAMP_PROTOTYPE_(i8)
+CLAMP_PROTOTYPE_(u16)
+CLAMP_PROTOTYPE_(i16)
+CLAMP_PROTOTYPE_(u32)
+CLAMP_PROTOTYPE_(i32)
+CLAMP_PROTOTYPE_(u64)
+CLAMP_PROTOTYPE_(i64)
+CLAMP_PROTOTYPE_(f32)
+CLAMP_PROTOTYPE_(f64)
+// END ZMATH
 
 // BEGIN ZARENA
 #define KILOBYTES(number) ((number) * 1024ull)
@@ -171,6 +209,47 @@ Result_char getChar(String* str, u32 i);
 
 #ifdef ZSL_IMPLEMENTATION
 #undef ZSL_IMPLEMENTATION
+
+// BEGIN ZMATH
+#define MIN_IMPLEMENTATION_(t) t min_##t(t a, t b) { return a < b ? a : b; }
+MIN_IMPLEMENTATION_(u8)
+MIN_IMPLEMENTATION_(i8)
+MIN_IMPLEMENTATION_(u16)
+MIN_IMPLEMENTATION_(i16)
+MIN_IMPLEMENTATION_(u32)
+MIN_IMPLEMENTATION_(i32)
+MIN_IMPLEMENTATION_(u64)
+MIN_IMPLEMENTATION_(i64)
+MIN_IMPLEMENTATION_(f32)
+MIN_IMPLEMENTATION_(f64)
+
+#define MAX_IMPLEMENTATION_(t) t max_##t(t a, t b) { return a > b ? a : b; }
+MAX_IMPLEMENTATION_(u8)
+MAX_IMPLEMENTATION_(i8)
+MAX_IMPLEMENTATION_(u16)
+MAX_IMPLEMENTATION_(i16)
+MAX_IMPLEMENTATION_(u32)
+MAX_IMPLEMENTATION_(i32)
+MAX_IMPLEMENTATION_(u64)
+MAX_IMPLEMENTATION_(i64)
+MAX_IMPLEMENTATION_(f32)
+MAX_IMPLEMENTATION_(f64)
+
+#define CLAMP_IMPLEMENTATION_(t) t clamp_##t(t val, t mn, t mx)\
+    {\
+      return max_##t(min_##t(val , mx), mn);\
+    }
+CLAMP_IMPLEMENTATION_(u8)
+CLAMP_IMPLEMENTATION_(i8)
+CLAMP_IMPLEMENTATION_(u16)
+CLAMP_IMPLEMENTATION_(i16)
+CLAMP_IMPLEMENTATION_(u32)
+CLAMP_IMPLEMENTATION_(i32)
+CLAMP_IMPLEMENTATION_(u64)
+CLAMP_IMPLEMENTATION_(i64)
+CLAMP_IMPLEMENTATION_(f32)
+CLAMP_IMPLEMENTATION_(f64)
+// END ZMATH
 
 // BEGIN ZARENA
 Arena* newArena(u64 size)

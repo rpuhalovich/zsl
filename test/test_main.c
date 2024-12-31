@@ -7,6 +7,7 @@
 #include <zlayout.h>
 
 #include "test_zarray.c"
+#include "test_zmath.c"
 #include "test_zstring.c"
 
 ZTEST_MAIN()
