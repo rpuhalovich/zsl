@@ -47,6 +47,10 @@ typedef struct {
 } v2i;
 
 typedef struct {
+    u32 x, y;
+} v2u;
+
+typedef struct {
     f32 x, y, z;
 } v3f;
 
@@ -187,6 +191,7 @@ Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 void pop_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
+void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element);
 %TEMPLATE_END%
 // END ZARRAY
 
@@ -430,6 +435,21 @@ void clear_%TYPENP%(Array_%TYPENP%* array)
 {
     memset(array->items, 0, sizeof(%TYPE%) * array->length);
     array->length = 0;
+}
+
+void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
+{
+    array->length++;
+    if (array->length >= array->capacity) {
+        %TYPE%* newItems = allocate(arena, sizeof(%TYPE%) * array->capacity * 2ull);
+        memcpy(newItems, array->items, i);
+        memcpy(newItems + i + 1, array->items + i, array->length - i + 2);
+        array->items = newItems;
+        array->capacity *= 2ull;
+    } else {
+        memmove(array->items + i + 1, array->items + i, array->length - i + 2);
+    }
+    set_%TYPENP%(array, i, element);
 }
 %TEMPLATE_END%
 // END ZARRAY

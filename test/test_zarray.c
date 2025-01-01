@@ -62,3 +62,49 @@ TEST(push_many_success)
 clean:
     freeArena(a);
 }
+
+TEST(insert_success)
+{
+    Arena* a = newArena(KILOBYTES(16));
+
+    Array_u32* arr = newArrayc_u32(a, 8);
+    push_u32(a, arr, 1);
+    push_u32(a, arr, 2);
+    push_u32(a, arr, 3);
+
+    insert_u32(a, arr, 1, 10);
+
+    ZASSERTC(1 == get_u32(arr, 0).result);
+    ZASSERTC(10 == get_u32(arr, 1).result);
+    ZASSERTC(2 == get_u32(arr, 2).result);
+    ZASSERTC(3 == get_u32(arr, 3).result);
+
+    ZASSERTC(4 == arr->length);
+    ZASSERTC(8 == arr->capacity);
+
+clean:
+    freeArena(a);
+}
+
+TEST(insert_newcapacity_success)
+{
+    Arena* a = newArena(KILOBYTES(16));
+
+    Array_u32* arr = newArrayc_u32(a, 4);
+    push_u32(a, arr, 1);
+    push_u32(a, arr, 2);
+    push_u32(a, arr, 3);
+
+    insert_u32(a, arr, 1, 10);
+
+    ZASSERTC(1 == get_u32(arr, 0).result);
+    ZASSERTC(10 == get_u32(arr, 1).result);
+    ZASSERTC(2 == get_u32(arr, 2).result);
+    ZASSERTC(3 == get_u32(arr, 3).result);
+
+    ZASSERTC(4 == arr->length);
+    ZASSERTC(8 == arr->capacity);
+
+clean:
+    freeArena(a);
+}
