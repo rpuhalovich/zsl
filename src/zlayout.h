@@ -4,21 +4,21 @@
 #include <zsl.h>
 
 typedef enum {
-    FLEXDIRECTION_BEGIN = 0,
-    FLEXDIRECTION_COLUMN,
-    FLEXDIRECTION_ROW,
-    FLEXDIRECTION_END
+    FLEX_DIRECTION_BEGIN = 0,
+    FLEX_DIRECTION_COLUMN,
+    FLEX_DIRECTION_ROW,
+    FLEX_DIRECTION_END
 } FlexDirection;
 
 typedef enum {
-    JUSTIFYCONTENT_BEGIN = 0,
-    JUSTIFYCONTENT_FLEX_START,
-    JUSTIFYCONTENT_CENTER,
-    JUSTIFYCONTENT_FLEX_END,
-    JUSTIFYCONTENT_SPACE_BETWEEN,
-    JUSTIFYCONTENT_SPACE_AROUND,
-    JUSTIFYCONTENT_SPACE_EVENLY,
-    JUSTIFYCONTENT_END
+    JUSTIFY_CONTENT_BEGIN = 0,
+    JUSTIFY_CONTENT_FLEX_START,
+    JUSTIFY_CONTENT_CENTER,
+    JUSTIFY_CONTENT_FLEX_END,
+    JUSTIFY_CONTENT_SPACE_BETWEEN,
+    JUSTIFY_CONTENT_SPACE_AROUND,
+    JUSTIFY_CONTENT_SPACE_EVENLY,
+    JUSTIFY_CONTENT_END
 } JustifyContent;
 
 typedef struct {
@@ -126,7 +126,7 @@ void calculate_(Arena* arena, LayoutNode* root)
 
     // calculate children bounds
     switch (root->style.flexDirection) {
-        case (FLEXDIRECTION_ROW): {
+        case (FLEX_DIRECTION_ROW): {
             f32 styleWidth = 0.0f;
             u32 styleWidthCount = 0;
             for (u32 i = 0; i < root->children->length; i++) {
