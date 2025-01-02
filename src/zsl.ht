@@ -204,6 +204,7 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 void pop_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
 void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element);
+void remove_%TYPENP%(Array_%TYPENP%* array, u32 i);
 %TEMPLATE_END%
 // END ZARRAY
 
@@ -477,6 +478,12 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
         memmove(array->items + i + 1, array->items + i, array->length - i + 2);
     }
     set_%TYPENP%(array, i, element);
+}
+
+void remove_%TYPENP%(Array_%TYPENP%* array, u32 i)
+{
+  memmove(array->items + i, array->items + i + 1, array->length - i);
+  array->length--;
 }
 %TEMPLATE_END%
 // END ZARRAY
