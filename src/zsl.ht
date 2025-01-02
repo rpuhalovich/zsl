@@ -38,11 +38,7 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #endif
 
-u32 safeTrunc_u64(u64 value)
-{
-  ASSERT(value <= 0xFFFFFFFF);
-  return (u32)value;
-}
+u32 safeTrunc_u64(u64 value);
 
 typedef struct {
     f32 x, y;
@@ -233,6 +229,15 @@ Result_char getChar(String* str, u32 i);
 
 #ifdef ZSL_IMPLEMENTATION
 #undef ZSL_IMPLEMENTATION
+
+// BEGIN ZTYPES
+u32 safeTrunc_u64(u64 value)
+{
+  assert(value <= 0xFFFFFFFF);
+  u32 result = (u32)value;
+  return result;
+}
+// END ZTYPES
 
 // BEGIN ZMATH
 #define MIN_IMPLEMENTATION_(t) t min_##t(t a, t b) { return a < b ? a : b; }
