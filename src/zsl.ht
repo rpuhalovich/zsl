@@ -38,6 +38,12 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #endif
 
+u32 safeTrunc_u64(u64 value)
+{
+  ASSERT(value <= 0xFFFFFFFF);
+  return (u32)value;
+}
+
 typedef struct {
     f32 x, y;
 } v2f;
