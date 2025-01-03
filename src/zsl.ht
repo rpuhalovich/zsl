@@ -483,7 +483,6 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
     if (array->length >= array->capacity) {
         %TYPE%* newItems = allocate(arena, sizeof(%TYPE%) * array->capacity * 2ull);
 
-        // memcpy(newItems, array->items, i);
         for (u32 i = 0; i < array->length; i++)
             newItems[i] = array->items[i];
 
