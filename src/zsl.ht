@@ -486,14 +486,16 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
         array->items = newItems;
         array->capacity *= 2ull;
     } else {
-        memmove(array->items + i + 1, array->items + i, array->length - i + 2);
+        for (u32 j = array->length - 1; j > i; j--)
+          set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
     }
     set_%TYPENP%(array, i, element);
 }
 
 void remove_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
-  memmove(array->items + i, array->items + i + 1, array->length - i);
+  for (u32 j = i; j < array->length; j++)
+    set_%TYPENP%(array, j, get_%TYPENP%(array, j + 1).result);
   array->length--;
 }
 %TEMPLATE_END%
