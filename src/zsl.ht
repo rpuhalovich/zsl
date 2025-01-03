@@ -504,13 +504,10 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
 
         array->items = newItems;
         array->capacity *= 2ull;
-
-        for (u32 j = array->length - 1; j > i; j--)
-          set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
-    } else {
-        for (u32 j = array->length - 1; j > i; j--)
-          set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
     }
+
+    for (u32 j = array->length - 1; j > i; j--)
+      set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
 
     set_%TYPENP%(array, i, element);
 }
