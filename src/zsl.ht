@@ -405,6 +405,7 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity)
     a->length = 0;
     a->capacity = b2capacity;
     a->items = allocate(arena, sizeof(%TYPE%) * a->capacity);
+
     return a;
 }
 
