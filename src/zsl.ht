@@ -38,7 +38,8 @@ typedef uint64_t u64;
 typedef int64_t i64;
 #endif
 
-u32 safeTrunc_u64(u64 value);
+u32 safeTrunc_u64_u32(u64 value);
+i32 safeTrunc_u32_i32(u32 value);
 
 typedef struct {
     f32 x, y;
@@ -232,11 +233,16 @@ Result_char getChar(String* str, u32 i);
 #undef ZSL_IMPLEMENTATION
 
 // BEGIN ZTYPES
-u32 safeTrunc_u64(u64 value)
+u32 safeTrunc_u64_u32(u64 value)
 {
   assert(value <= 0xFFFFFFFF);
-  u32 result = (u32)value;
-  return result;
+  return (u32)value;
+}
+
+i32 safeTrunc_u32_i32(u32 value)
+{
+  assert(value <= 2147483648 && value >= 0);
+  return (i32)value;
 }
 // END ZTYPES
 
