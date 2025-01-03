@@ -209,7 +209,7 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 void pop_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
 void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element);
-void remove_%TYPENP%(Array_%TYPENP%* array, u32 i);
+Error remove_%TYPENP%(Array_%TYPENP%* array, u32 i);
 %TEMPLATE_END%
 // END ZARRAY
 
@@ -514,11 +514,16 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
     set_%TYPENP%(array, i, element);
 }
 
-void remove_%TYPENP%(Array_%TYPENP%* array, u32 i)
+Error remove_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
+  if (i >= array->length)
+    return ERROR_OUT_OF_BOUNDS;
+
   for (u32 j = i; j < array->length; j++)
     set_%TYPENP%(array, j, get_%TYPENP%(array, j + 1).result);
   array->length--;
+
+  return SUCCESS;
 }
 %TEMPLATE_END%
 // END ZARRAY
