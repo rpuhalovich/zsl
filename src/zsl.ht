@@ -204,6 +204,7 @@ Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
 Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
 Result_%TYPENP% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult);
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
+Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
 void pop_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
@@ -454,6 +455,14 @@ Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
         return ERROR_OUT_OF_BOUNDS;
     array->items[i] = val;
     return SUCCESS;
+}
+
+Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i)
+{
+  if (i >= array->length)
+    return ERROR_OUT_OF_BOUNDS;
+  array->length = i;
+  return SUCCESS;
 }
 
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
