@@ -34,7 +34,7 @@ typedef uint16_t u16;
 typedef int16_t i16;
 typedef uint32_t u32;
 typedef int32_t i32;
-typedef uint64_t u64;
+typedef unsigned long long u64;
 typedef int64_t i64;
 #endif
 
@@ -70,17 +70,10 @@ typedef struct {
 } rec;
 
 #ifdef ZDEBUG
-    #define LINESTR1(file, line) file ":" #line
-    #define LINESTR(file, line) LINESTR1(file, line)
-    #ifdef __FILE_NAME__
-        #define FILE LINESTR(__FILE_NAME__, __LINE__)
-    #else
-        #define FILE LINESTR(__FILE__, __LINE__)
-    #endif
-
-    #define ZLOG(...) printf("[INFO] [" FILE "] " __VA_ARGS__)
-    #define ZLOG_WARN(...) printf("[WARN] [" FILE "] " __VA_ARGS__)
-    #define ZLOG_ERROR(...) printf("[ERROR] [" FILE "] " __VA_ARGS__)
+    // TODO: find out how to add line number to the logging
+    #define ZLOG(...) printf("[INFO] [" __FILE__ "] " __VA_ARGS__)
+    #define ZLOG_WARN(...) printf("[WARN] [" __FILE__ "] " __VA_ARGS__)
+    #define ZLOG_ERROR(...) printf("[ERROR] [" __FILE__ "] " __VA_ARGS__)
 #else
     #define ZLOG(...)
     #define ZLOG_WARN(...)
@@ -242,7 +235,7 @@ u32 safeTrunc_u64_u32(u64 value)
 
 i32 safeTrunc_u32_i32(u32 value)
 {
-  assert(value <= 2147483648 && value >= 0);
+  assert(value <= 2147483648);
   return (i32)value;
 }
 // END ZTYPES
@@ -438,21 +431,21 @@ Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len)
 
 Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
-    if (i < 0 || i >= array->length)
+    if (i >= array->length)
         return fail_%TYPENP%(ERROR_OUT_OF_BOUNDS);
     return success_%TYPENP%(array->items[i]);
 }
 
 Result_%TYPENP% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult)
 {
-    if (i < 0 || i >= array->length)
+    if (i >= array->length)
         return faild_%TYPENP%(ERROR_OUT_OF_BOUNDS, defaultResult);
     return success_%TYPENP%(array->items[i]);
 }
 
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
 {
-    if (i < 0 || i >= array->length)
+    if (i >= array->length)
         return ERROR_OUT_OF_BOUNDS;
     array->items[i] = val;
     return SUCCESS;
@@ -483,8 +476,6 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
 void pop_%TYPENP%(Array_%TYPENP%* array)
 {
     array->length--;
-    if (array->length < 0)
-        array->length = 0;
 }
 
 void clear_%TYPENP%(Array_%TYPENP%* array)
@@ -575,7 +566,7 @@ char* cstr(Arena* arena, String* str)
 
 Result_char getChar(String* str, u32 i)
 {
-    if (i < 0 || i >= str->length)
+    if (i >= str->length)
         return fail_char(ERROR_OUT_OF_BOUNDS);
     return success_char(str->chars[i]);
 }
