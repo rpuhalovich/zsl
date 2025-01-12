@@ -9,6 +9,7 @@ cmake-debug-build/
 .cache/
 
 .DS_Store
+.vimrc
 compile_commands.json
 tags
 
