@@ -1,3 +1,4 @@
+import glob
 import pathlib
 import os
 import shutil
@@ -23,7 +24,7 @@ def cp(source: str, destination: str) -> None:
 def exeExists(exe: str) -> bool:
     return shutil.which(exe) != None
 
-def glob(dirpath: str) -> list[str]:
+def globDir(dirpath: str) -> list[str]:
     res = []
     res = glob.glob(dirpath + '/**/*.c', recursive=True)
     res += glob.glob(dirpath + '/**/*.h', recursive=True)
@@ -49,12 +50,12 @@ def main(args: list[str]) -> None:
         exe("./build/ztest")
 
     if args[0] == "format":
-        paths = glob("./src") + glob("./test")
+        paths = globDir("./src") + globDir("./test")
         for path in paths:
             exe("clang-format -i --style=file " + path)
 
     if args[0] == "tidy":
-        for path in glob("./src"):
+        for path in globDir("./src"):
             exe("clang-tidy " + path)
 
     if args[0] == "check":

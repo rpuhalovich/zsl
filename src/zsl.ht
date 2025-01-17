@@ -199,7 +199,8 @@ Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
 Array_%TYPENP%* newArrayl_%TYPENP%(Arena* arena, u32 length);
 Array_%TYPENP%* newArraya_%TYPENP%(Arena* arena, %TYPE%* array, u32 len);
 Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
-Result_%TYPENP% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult);
+%TYPE% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult);
+%TYPE% getcb_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% (*callback)(Arena* arena));
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
@@ -440,11 +441,18 @@ Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i)
     return success_%TYPENP%(array->items[i]);
 }
 
-Result_%TYPENP% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult)
+%TYPE% getd_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% defaultResult)
 {
     if (i >= array->length)
-        return faild_%TYPENP%(ERROR_OUT_OF_BOUNDS, defaultResult);
-    return success_%TYPENP%(array->items[i]);
+        return defaultResult;
+    return array->items[i];
+}
+
+%TYPE% getcb_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% (*callback)(Arena* arena))
+{
+    if (i >= array->length)
+        return callback(arena);
+    return array->items[i];
 }
 
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
