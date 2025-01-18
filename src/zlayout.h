@@ -51,7 +51,7 @@ typedef struct tLayoutResult {
 
 LayoutNode* newLayoutNode(Arena* arena, i32 id, LayoutStyle style);
 LayoutNode* addChild(Arena* arena, LayoutNode* parent, i32 id, LayoutStyle style);
-Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root);
+Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root, v2f pos);
 
 #ifdef ZLAYOUT_IMPLEMENTATION
 #undef ZLAYOUT_IMPLEMENTATION
@@ -196,10 +196,10 @@ void calculate_(Arena* arena, LayoutNode* root)
     }
 }
 
-Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root)
+Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root, v2f pos)
 {
-    root->resultBounds_.x = 0.0f;
-    root->resultBounds_.y = 0.0f;
+    root->resultBounds_.x = pos.x;
+    root->resultBounds_.y = pos.y;
     root->resultBounds_.width = root->style.width;
     root->resultBounds_.height = root->style.height;
 
