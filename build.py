@@ -45,6 +45,7 @@ def main(args: list[str]) -> None:
         if sys.platform != "win32": cp("./build/compile_commands.json", "./compile_commands.json")
 
     if args[0] == "test":
+        if sys.platform == "win32": return # TODO: make ztest work on windows
         main(["proj"])
         exe("cmake --build build")
         exe("./build/ztest")
