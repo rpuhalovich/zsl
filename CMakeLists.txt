@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.28.3)
 project(zsl C)
-set(STDC_DIR "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include")
 set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -Wall -Wextra -Wpedantic -Werror -I${STDC_DIR}")
+
+# if (APPLE)
+#     set(STDC_DIR "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/16/include")
+#     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG -Wall -Wextra -Wpedantic -Werror -I${STDC_DIR}")
+# else()
+#     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DDEBUG")
+# endif()
 
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(GEN_DIR "${CMAKE_SOURCE_DIR}/gen")

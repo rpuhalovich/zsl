@@ -42,7 +42,7 @@ def main(args: list[str]) -> None:
     if args[0] == "proj":
         main(["ctemplate"])
         exe("cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug")
-        cp("./build/compile_commands.json", "./compile_commands.json")
+        if sys.platform != "win32": cp("./build/compile_commands.json", "./compile_commands.json")
 
     if args[0] == "test":
         main(["proj"])
