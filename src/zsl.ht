@@ -220,7 +220,7 @@ typedef struct sString {
 
 String* newStringc(Arena* arena, char* str, u32 len);
 String* newStrings(Arena* arena, String* str);
-i32 cmp(String* str1, String* str2);
+bool eq(String* str1, String* str2);
 String* cat(Arena* arena, String* str1, String* str2);
 char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
@@ -548,12 +548,15 @@ String* newStrings(Arena* arena, String* str)
     return s;
 }
 
-i32 cmp(String* str1, String* str2)
+bool eq(String* str1, String* str2)
 {
     u32 s1len = str1->length;
     u32 s2len = str2->length;
-    i32 res = strncmp(str1->chars, str2->chars, s1len < s2len ? s1len : s2len);
-    return res;
+    if (s1len != s2len)
+      return false;
+
+    bool res = strncmp(str1->chars, str2->chars, s1len);
+    return res == 0;
 }
 
 String* cat(Arena* arena, String* str1, String* str2)
