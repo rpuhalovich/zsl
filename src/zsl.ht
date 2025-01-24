@@ -137,6 +137,8 @@ CMP_PROTOTYPE_(u64)
 CMP_PROTOTYPE_(i64)
 CMP_PROTOTYPE_(f32)
 CMP_PROTOTYPE_(f64)
+
+bool isPointInRec(rec r, v2f p);
 // END ZMATH
 
 // BEGIN ZARENA
@@ -299,6 +301,11 @@ CMP_IMPLEMENTATION_(u64)
 CMP_IMPLEMENTATION_(i64)
 CMP_IMPLEMENTATION_(f32)
 CMP_IMPLEMENTATION_(f64)
+
+bool isPointInRec(rec r, v2f p)
+{
+  return r.x <= p.x && p.x <= r.x + r.width && r.y <= p.y && p.y <= r.y + r.height;
+}
 // END ZMATH
 
 // BEGIN ZARENA
