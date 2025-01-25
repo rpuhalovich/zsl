@@ -13,6 +13,7 @@ typedef struct sString String;
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define f32 float
 #define f64 double
@@ -44,6 +45,7 @@ typedef int64_t i64;
 
 u32 safeTrunc_u64_u32(u64 value);
 i32 safeTrunc_u32_i32(u32 value);
+f32 safeTrunc_i32_f32(i32 value);
 
 typedef struct {
     f32 x, y;
@@ -143,6 +145,10 @@ CMP_PROTOTYPE_(f32)
 CMP_PROTOTYPE_(f64)
 
 bool isPointInRec(rec r, v2f p);
+rec divides_rec(rec r, f32 val);
+rec multiplys_rec(rec r, f32 val);
+v2f multiplys_v2f(v2f v, f32 val);
+bool eq_f32(f32 a, f32 b, f32 eps);
 // END ZMATH
 
 // BEGIN ZARENA
@@ -250,6 +256,12 @@ i32 safeTrunc_u32_i32(u32 value)
   assert(value <= 2147483648);
   return (i32)value;
 }
+
+f32 safeTrunc_i32_f32(i32 value)
+{
+  assert(-(1 << 24) < value && value < (1 << 24));
+  return (f32)value;
+}
 // END ZTYPES
 
 // BEGIN ZMATH
@@ -310,6 +322,40 @@ CMP_IMPLEMENTATION_(f64)
 bool isPointInRec(rec r, v2f p)
 {
   return r.x <= p.x && p.x <= r.x + r.width && r.y <= p.y && p.y <= r.y + r.height;
+}
+
+rec divides_rec(rec r, f32 val)
+{
+  assert(val > 0.0F);
+  return (rec){
+    .x = r.x / val,
+    .y = r.y / val,
+    .width = r.width / val,
+    .height = r.height / val,
+  };
+}
+
+rec multiplys_rec(rec r, f32 val)
+{
+  return (rec){
+    .x = r.x * val,
+    .y = r.y * val,
+    .width = r.width * val,
+    .height = r.height * val,
+  };
+}
+
+v2f multiplys_v2f(v2f v, f32 val)
+{
+  return (v2f) {
+    .x = v.x * val,
+    .y = v.y * val,
+  };
+}
+
+bool eq_f32(f32 a, f32 b, f32 eps)
+{
+  return fabs(a - b) < eps;
 }
 // END ZMATH
 
