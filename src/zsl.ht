@@ -74,10 +74,14 @@ typedef struct {
 } rec;
 
 #ifdef ZDEBUG
-    // TODO: find out how to add line number to the logging
-    #define ZLOG(...) printf("[INFO] [" __FILE__ "] " __VA_ARGS__)
-    #define ZLOG_WARN(...) printf("[WARN] [" __FILE__ "] " __VA_ARGS__)
-    #define ZLOG_ERROR(...) printf("[ERROR] [" __FILE__ "] " __VA_ARGS__)
+    #define STRINGIFY(x) #x
+    #define TOSTRING(x) STRINGIFY(x)
+    #define CONCAT_FILE_LINE(file, line) file ":" TOSTRING(line)
+    #define FILE_LINE CONCAT_FILE_LINE(__FILE__, __LINE__)
+
+    #define ZLOG(...) printf("[INFO] [" FILE_LINE "] " __VA_ARGS__)
+    #define ZLOG_WARN(...) printf("[WARN] [" FILE_LINE "] " __VA_ARGS__)
+    #define ZLOG_ERROR(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
 #else
     #define ZLOG(...)
     #define ZLOG_WARN(...)
