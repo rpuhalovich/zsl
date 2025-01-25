@@ -355,7 +355,7 @@ v2f multiplys_v2f(v2f v, f32 val)
 
 bool eq_f32(f32 a, f32 b, f32 eps)
 {
-  return fabs(a - b) < eps;
+  return fabs(a - b) <= eps;
 }
 // END ZMATH
 
