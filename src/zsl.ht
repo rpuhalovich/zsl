@@ -7,13 +7,14 @@ struct sString;
 typedef struct sString String;
 
 // BEGIN ZTYPES
-#include <string.h>
 #include <assert.h>
+#include <float.h>
+#include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 #define f32 float
 #define f64 double
@@ -44,6 +45,7 @@ typedef int64_t i64;
 #endif
 
 u32 safeTrunc_u64_u32(u64 value);
+f32 safeTrunc_u64_f32(u64 value);
 i32 safeTrunc_u32_i32(u32 value);
 f32 safeTrunc_i32_f32(i32 value);
 
@@ -252,6 +254,12 @@ u32 safeTrunc_u64_u32(u64 value)
   return (u32)value;
 }
 
+f32 safeTrunc_u64_f32(u64 value)
+{
+  assert(FLT_MIN < value && value < FLT_MAX);
+  return (f32)value;
+}
+
 i32 safeTrunc_u32_i32(u32 value)
 {
   assert(value <= 2147483648);
@@ -260,7 +268,7 @@ i32 safeTrunc_u32_i32(u32 value)
 
 f32 safeTrunc_i32_f32(i32 value)
 {
-  assert(-(1 << 24) < value && value < (1 << 24));
+  assert(FLT_MIN < value && value < FLT_MAX);
   return (f32)value;
 }
 // END ZTYPES
