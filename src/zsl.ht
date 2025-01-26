@@ -216,7 +216,8 @@ Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
-void pop_%TYPENP%(Array_%TYPENP%* array);
+%TYPE% pop_%TYPENP%(Array_%TYPENP%* array);
+%TYPE% popFront_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
 void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element);
 Error remove_%TYPENP%(Array_%TYPENP%* array, u32 i);
@@ -524,7 +525,7 @@ Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val)
 Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
   if (i >= array->length)
-    return ERROR_OUT_OF_BOUNDS;
+      return ERROR_OUT_OF_BOUNDS;
   array->length = i;
   return SUCCESS;
 }
@@ -543,9 +544,20 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
     array->items[array->length - 1] = element;
 }
 
-void pop_%TYPENP%(Array_%TYPENP%* array)
+%TYPE% pop_%TYPENP%(Array_%TYPENP%* array)
 {
+    %TYPE% res = array->items[array->length - 1];
     array->length--;
+    return res;
+}
+
+%TYPE% popFront_%TYPENP%(Array_%TYPENP%* array)
+{
+    %TYPE% res = array->items[0];
+    for (u32 i = 1; i < array->length; i++)
+        array->items[i - 1] = array->items[i];
+    array->length--;
+    return res;
 }
 
 void clear_%TYPENP%(Array_%TYPENP%* array)
@@ -568,21 +580,21 @@ void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element)
     }
 
     for (u32 j = array->length - 1; j > i; j--)
-      set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
+        set_%TYPENP%(array, j, get_%TYPENP%(array, j - 1).result);
 
     set_%TYPENP%(array, i, element);
 }
 
 Error remove_%TYPENP%(Array_%TYPENP%* array, u32 i)
 {
-  if (i >= array->length)
-    return ERROR_OUT_OF_BOUNDS;
+    if (i >= array->length)
+        return ERROR_OUT_OF_BOUNDS;
 
-  for (u32 j = i; j < array->length - 1; j++)
-    set_%TYPENP%(array, j, get_%TYPENP%(array, j + 1).result);
-  array->length--;
+    for (u32 j = i; j < array->length - 1; j++)
+        set_%TYPENP%(array, j, get_%TYPENP%(array, j + 1).result);
+    array->length--;
 
-  return SUCCESS;
+    return SUCCESS;
 }
 %TEMPLATE_END%
 // END ZARRAY
@@ -600,7 +612,7 @@ String* newStringc(Arena* arena, char* str, u32 len)
 
 String* newStrings(Arena* arena, String* str)
 {
-    return newStringc(arena, str->chars, str->len);
+    return newStringc(arena, str->chars, str->length);
 }
 
 bool eq(String* str1, String* str2)
@@ -608,7 +620,7 @@ bool eq(String* str1, String* str2)
     u32 s1len = str1->length;
     u32 s2len = str2->length;
     if (s1len != s2len)
-      return false;
+        return false;
 
     bool res = strncmp(str1->chars, str2->chars, s1len);
     return res == 0;
