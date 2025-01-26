@@ -592,18 +592,15 @@ String* newStringc(Arena* arena, char* str, u32 len)
 {
     String* s = allocate(arena, sizeof(String));
     s->length = len;
-    s->chars = allocate(arena, sizeof(char) * s->length);
+    s->chars = allocate(arena, sizeof(char) * (len + 1));
     memcpy(s->chars, str, s->length);
+    s->chars[len + 1] = '\0'; // not necessary, but I like being explicit
     return s;
 }
 
 String* newStrings(Arena* arena, String* str)
 {
-    String* s = allocate(arena, sizeof(String));
-    s->chars = allocate(arena, sizeof(char) * str->length);
-    s->length = str->length;
-    memcpy(s->chars, str->chars, str->length);
-    return s;
+    return newStringc(arena, str->chars, str->len);
 }
 
 bool eq(String* str1, String* str2)
