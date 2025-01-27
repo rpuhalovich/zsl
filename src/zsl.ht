@@ -8,9 +8,6 @@ typedef struct sString String;
 
 // BEGIN ZTYPES
 #include <assert.h>
-#include <float.h>
-#include <limits.h>
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +17,7 @@ typedef struct sString String;
 #define f64 double
 
 #if defined(_MSC_VER) || defined(__SYMBIAN32__)
-#include <errno.h>
+#include <errno.h> // NOLINT
 
 typedef unsigned char u8;
 typedef signed char i8;
@@ -31,7 +28,7 @@ typedef signed int i32;
 typedef unsigned long long u64;
 typedef signed long i64;
 #else
-#include <sys/errno.h>
+#include <sys/errno.h> // NOLINT
 
 #include <stdint.h>
 typedef uint8_t u8;
@@ -44,10 +41,12 @@ typedef unsigned long long u64;
 typedef int64_t i64;
 #endif
 
-u32 safeTrunc_u64_u32(u64 value);
-f32 safeTrunc_u64_f32(u64 value);
-i32 safeTrunc_u32_i32(u32 value);
 f32 safeTrunc_i32_f32(i32 value);
+f32 safeTrunc_u32_f32(u32 value);
+f32 safeTrunc_u64_f32(u64 value);
+i32 safeTrunc_f32_i32(f32 value);
+i32 safeTrunc_u32_i32(u32 value);
+u32 safeTrunc_u64_u32(u64 value);
 
 typedef struct {
     f32 x, y;
@@ -248,6 +247,9 @@ Result_char getChar(String* str, u32 i);
 #undef ZSL_IMPLEMENTATION
 
 // BEGIN ZTYPES
+#include <float.h>
+#include <limits.h>
+
 u32 safeTrunc_u64_u32(u64 value)
 {
   assert(value <= 0xFFFFFFFF);
@@ -256,7 +258,7 @@ u32 safeTrunc_u64_u32(u64 value)
 
 f32 safeTrunc_u64_f32(u64 value)
 {
-  assert(FLT_MIN < value && value < FLT_MAX);
+  assert(FLT_MIN <= value && value <= FLT_MAX);
   return (f32)value;
 }
 
@@ -266,14 +268,28 @@ i32 safeTrunc_u32_i32(u32 value)
   return (i32)value;
 }
 
+f32 safeTrunc_u32_f32(u32 value)
+{
+  assert(value <= FLT_MAX);
+  return (f32)value;
+}
+
 f32 safeTrunc_i32_f32(i32 value)
 {
-  assert(FLT_MIN < value && value < FLT_MAX);
+  assert(FLT_MIN <= value && value <= FLT_MAX);
   return (f32)value;
+}
+
+i32 safeTrunc_f32_i32(f32 value)
+{
+  assert(INT_MIN <= value && value <= INT_MAX); // probs not necessary
+  return (i32)value;
 }
 // END ZTYPES
 
 // BEGIN ZMATH
+#include <math.h>
+
 #define MIN_IMPLEMENTATION_(t) t min_##t(t a, t b) { return a < b ? a : b; }
 MIN_IMPLEMENTATION_(u8)
 MIN_IMPLEMENTATION_(i8)
