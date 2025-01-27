@@ -232,6 +232,8 @@ typedef struct sString {
     u32 length;
 } String;
 
+typedef struct sString StringView;
+
 String* newStringc(Arena* arena, char* str, u32 len);
 String* newStrings(Arena* arena, String* str);
 bool eq(String* str1, String* str2);
@@ -276,7 +278,7 @@ f32 safeTrunc_u32_f32(u32 value)
 
 f32 safeTrunc_i32_f32(i32 value)
 {
-  assert(FLT_MIN <= value && value <= FLT_MAX);
+  assert(0 <= value && value <= FLT_MAX);
   return (f32)value;
 }
 
