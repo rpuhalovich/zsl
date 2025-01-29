@@ -240,7 +240,7 @@ bool eq(String* str1, String* str2);
 String* cat(Arena* arena, String* str1, String* str2);
 char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
-void getSlice(String* str, String* res, u32 start, u32 end);
+void getSlice(String* str, StringView* res, u32 start, u32 end);
 
 #define newStringcs(arena, str) newStringc(arena, str, strlen(str))
 #define ns(arena, str) newStringc(arena, str, strlen(str))
@@ -680,7 +680,7 @@ Result_char getChar(String* str, u32 i)
     return success_char(str->chars[i]);
 }
 
-void getSlice(String* str, String* res, u32 start, u32 end)
+void getSlice(String* str, StringView* res, u32 start, u32 end)
 {
   u32 newstart = clamp_u32(start, 0, str->length);
   u32 newend = clamp_u32(end, start, str->length);
