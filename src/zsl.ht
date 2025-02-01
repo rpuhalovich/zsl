@@ -145,11 +145,12 @@ CMP_PROTOTYPE_(i64)
 CMP_PROTOTYPE_(f32)
 CMP_PROTOTYPE_(f64)
 
+bool eq_f32(f32 a, f32 b, f32 eps);
+bool eq_v2i(v2i v1, v2i v2);
 bool isPointInRec(rec r, v2f p);
 rec divides_rec(rec r, f32 val);
 rec multiplys_rec(rec r, f32 val);
 v2f multiplys_v2f(v2f v, f32 val);
-bool eq_f32(f32 a, f32 b, f32 eps);
 // END ZMATH
 
 // BEGIN ZARENA
@@ -158,10 +159,8 @@ bool eq_f32(f32 a, f32 b, f32 eps);
 #define GIGABYTES(number) (MEGABYTES(number) * 1024ull)
 #define TERABYTES(number) (GIGABYTES(number) * 1024ull)
 
-// clang-format off
 // macos memory management: https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/AboutMemory.html
 // Untangling Lifetimes - The Arena Allocator: https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator
-// clang-format on
 
 typedef struct {
     u8* memory;
@@ -384,6 +383,11 @@ v2f multiplys_v2f(v2f v, f32 val)
 bool eq_f32(f32 a, f32 b, f32 eps)
 {
   return fabs(a - b) <= eps;
+}
+
+bool eq_v2i(v2i v1, v2i v2)
+{
+  return v1.x == v2.x && v1.y == v2.y;
 }
 // END ZMATH
 
