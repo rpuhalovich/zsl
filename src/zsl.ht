@@ -395,6 +395,7 @@ bool eq_v2i(v2i v1, v2i v2)
 Arena* newArena(u64 size)
 {
     Arena* a = malloc(sizeof(Arena));
+    assert(a);
     memset(a, 0, sizeof(Arena));
 
     a->memory = malloc(size);
