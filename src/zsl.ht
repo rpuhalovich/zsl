@@ -207,8 +207,8 @@ typedef struct sArray_%TYPENP% {
 } Array_%TYPENP%;
 
 #define for_%TYPENP%(it, arr, idx)\
-  for (u32 idx = 0, tmp = 1; idx < arr->length; idx++, tmp = 1)\
-    for (%TYPE% it = get_%TYPENP%(arr, idx).result; tmp; tmp = 0)
+  for (u32 (idx) = 0, xxxx = 1; (idx) < (arr)->length; (idx)++, xxxx = 1)\
+    for (%TYPE% (it) = get_%TYPENP%((arr), (idx)).result; xxxx; xxxx = 0)
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
 Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
