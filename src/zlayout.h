@@ -4,41 +4,21 @@
 #include <zsl.h>
 
 typedef enum {
-    FLEX_DIRECTION_BEGIN = 0,
     FLEX_DIRECTION_COLUMN,
-    FLEX_DIRECTION_ROW,
-    FLEX_DIRECTION_END
+    FLEX_DIRECTION_ROW
 } FlexDirection;
 
-typedef enum {
-    JUSTIFY_CONTENT_BEGIN = 0,
-    JUSTIFY_CONTENT_FLEX_START,
-    JUSTIFY_CONTENT_CENTER,
-    JUSTIFY_CONTENT_FLEX_END,
-    JUSTIFY_CONTENT_SPACE_BETWEEN,
-    JUSTIFY_CONTENT_SPACE_AROUND,
-    JUSTIFY_CONTENT_SPACE_EVENLY,
-    JUSTIFY_CONTENT_END
-} JustifyContent;
-
 typedef struct {
+    FlexDirection flexDirection;
+
     f32 width;
     f32 height;
-
-    f32 flexGrow;
-    f32 flexShrink;
-    FlexDirection flexDirection;
-    JustifyContent justifyContent;
 
     f32 margin;
     f32 marginTop;
     f32 marginBottom;
     f32 marginLeft;
     f32 marginRight;
-
-    f32 padding;
-
-    f32 gap;
 } LayoutStyle;
 
 struct sLayoutNode;
@@ -65,7 +45,6 @@ typedef struct sLayoutNode {
     Array_pLayoutNode* children;
     LayoutStyle style;
     i32 id;
-
     rec resultBounds_;
 } LayoutNode;
 
@@ -202,7 +181,6 @@ Array_pLayoutResult* calculate(Arena* arena, LayoutNode* root, v2f pos)
     root->resultBounds_.y = pos.y;
     root->resultBounds_.width = root->style.width;
     root->resultBounds_.height = root->style.height;
-
     calculatedValues_ = newArray_pLayoutResult(arena);
     calculate_(arena, root);
     return calculatedValues_;
