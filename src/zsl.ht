@@ -82,13 +82,13 @@ typedef struct {
     #define CONCAT_FILE_LINE(file, line) file ":" TOSTRING(line)
     #define FILE_LINE CONCAT_FILE_LINE(__FILE__, __LINE__)
 
-    #define ZLOG(...) printf("[INFO] [" FILE_LINE "] " __VA_ARGS__)
-    #define ZLOG_WARN(...) printf("[WARN] [" FILE_LINE "] " __VA_ARGS__)
-    #define ZLOG_ERROR(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
+    #define zlog(...) printf("[INFO] [" FILE_LINE "] " __VA_ARGS__)
+    #define zlog_warn(...) printf("[WARN] [" FILE_LINE "] " __VA_ARGS__)
+    #define zlog_error(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
 #else
-    #define ZLOG(...)
-    #define ZLOG_WARN(...)
-    #define ZLOG_ERROR(...)
+    #define zlog(...)
+    #define zlog_warn(...)
+    #define zlog_error(...)
 #endif
 
 #define FORWARD(s, t)\
