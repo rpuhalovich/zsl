@@ -118,7 +118,6 @@ void calculate_(Arena* arena, LayoutNode* root)
             f32 curx = 0.0f;
             f32 childWidth = (newBounds.width - styleWidth) / (root->children->length - styleWidthCount);
             for_pLayoutNode (childNode, root->children, i) {
-
                 childNode->resultBounds_.x = newBounds.x + curx;
                 childNode->resultBounds_.y = newBounds.y;
 
