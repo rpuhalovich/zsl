@@ -14,11 +14,11 @@ typedef struct {
     f32 width;
     f32 height;
 
-    f32 margin;
-    f32 marginTop;
-    f32 marginBottom;
-    f32 marginLeft;
-    f32 marginRight;
+    f32 pad;
+    f32 padTop;
+    f32 padBottom;
+    f32 padLeft;
+    f32 padRight;
 } LayoutStyle;
 
 struct sLayoutNode;
@@ -71,30 +71,30 @@ LayoutResult* newLayoutResult(Arena* arena)
 
 void calculate_(Arena* arena, LayoutNode* root)
 {
-    // calculate root margin
+    // calculate root pad
     rec newBounds = root->resultBounds_;
 
-    if (root->style.margin > 0.0f) {
-        newBounds.x += root->style.margin;
-        newBounds.y += root->style.margin;
-        newBounds.width -= root->style.margin * 2;
-        newBounds.height -= root->style.margin * 2;
+    if (root->style.pad > 0.0f) {
+        newBounds.x += root->style.pad;
+        newBounds.y += root->style.pad;
+        newBounds.width -= root->style.pad * 2;
+        newBounds.height -= root->style.pad * 2;
     } else {
-        if (root->style.marginLeft > 0.0f) {
-            newBounds.x += root->style.marginLeft;
-            newBounds.width -= root->style.marginLeft;
+        if (root->style.padLeft > 0.0f) {
+            newBounds.x += root->style.padLeft;
+            newBounds.width -= root->style.padLeft;
         }
 
-        if (root->style.marginRight > 0.0f)
-            newBounds.width -= root->style.marginRight;
+        if (root->style.padRight > 0.0f)
+            newBounds.width -= root->style.padRight;
 
-        if (root->style.marginTop > 0.0f) {
-            newBounds.y += root->style.marginTop;
-            newBounds.height -= root->style.marginTop;
+        if (root->style.padTop > 0.0f) {
+            newBounds.y += root->style.padTop;
+            newBounds.height -= root->style.padTop;
         }
 
-        if (root->style.marginBottom > 0.0f)
-            newBounds.height -= root->style.marginBottom;
+        if (root->style.padBottom > 0.0f)
+            newBounds.height -= root->style.padBottom;
     }
 
     // add root to calculated values
