@@ -107,7 +107,7 @@ void calculate_(Arena* arena, LayoutNode* root)
     if (root->style.flexDirection == FLEX_DIRECTION_ROW) {
         f32 styleWidth = 0.0f;
         u32 styleWidthCount = 0;
-        for_pLayoutNode (childNode, root->children, i) {
+        for_pLayoutNode (childNode, root->children) {
             if (childNode->style.width <= 0.0f)
                 continue;
             styleWidth += childNode->style.width;
@@ -116,7 +116,7 @@ void calculate_(Arena* arena, LayoutNode* root)
 
         f32 curx = 0.0f;
         f32 childWidth = (newBounds.width - styleWidth) / (root->children->length - styleWidthCount);
-        for_pLayoutNode (childNode, root->children, i) {
+        for_pLayoutNode (childNode, root->children) {
             childNode->resultBounds_.x = newBounds.x + curx;
             childNode->resultBounds_.y = newBounds.y;
 
@@ -132,7 +132,7 @@ void calculate_(Arena* arena, LayoutNode* root)
     if (root->style.flexDirection == FLEX_DIRECTION_COLUMN) {
         f32 styleHeight = 0.0f;
         u32 styleHeightCount = 0;
-        for_pLayoutNode (childNode, root->children, i) {
+        for_pLayoutNode (childNode, root->children) {
             if (childNode->style.height <= 0.0f)
                 continue;
             styleHeight += childNode->style.height;
@@ -141,7 +141,7 @@ void calculate_(Arena* arena, LayoutNode* root)
 
         f32 cury = 0.0f;
         f32 childHeight = (newBounds.height - styleHeight) / (root->children->length - styleHeightCount);
-        for_pLayoutNode (childNode, root->children, i) {
+        for_pLayoutNode (childNode, root->children) {
             childNode->resultBounds_.x = newBounds.x;
             childNode->resultBounds_.y = newBounds.y + cury;
 
@@ -155,7 +155,7 @@ void calculate_(Arena* arena, LayoutNode* root)
     }
 
     // recurse into children
-    for_pLayoutNode (node, root->children, i)
+    for_pLayoutNode (node, root->children)
         calculate_(arena, node);
 }
 
