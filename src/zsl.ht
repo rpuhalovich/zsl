@@ -147,6 +147,7 @@ CMP_PROTOTYPE_(f64)
 
 bool eq_f32(f32 a, f32 b, f32 eps);
 bool eq_v2i(v2i v1, v2i v2);
+bool eq_rec(rec r1, rec r2);
 bool isPointInRec(rec r, v2f p);
 rec divides_rec(rec r, f32 val);
 rec multiplys_rec(rec r, f32 val);
@@ -207,8 +208,8 @@ typedef struct sArray_%TYPENP% {
 } Array_%TYPENP%;
 
 #define for_%TYPENP%(it, arr)\
-  for (u32 (idx##it) = 0, cont##it = 1; (idx##it) < (arr)->length; (idx##it)++, cont##it = 1)\
-    for (%TYPE% (it) = get_%TYPENP%((arr), (idx##it)).result; cont##it; cont##it = 0)
+  for (u32 (idx__##it##__) = 0, cont__##it##__ = 1; (idx__##it##__) < (arr)->length; (idx__##it##__)++, cont__##it##__ = 1)\
+    for (%TYPE% (it) = get_%TYPENP%((arr), (idx__##it##__)).result; cont__##it##__; cont__##it##__ = 0)
 
 Array_%TYPENP%* newArray_%TYPENP%(Arena* arena);
 Array_%TYPENP%* newArrayc_%TYPENP%(Arena* arena, u32 capacity);
@@ -392,6 +393,11 @@ bool eq_f32(f32 a, f32 b, f32 eps)
 bool eq_v2i(v2i v1, v2i v2)
 {
   return v1.x == v2.x && v1.y == v2.y;
+}
+
+bool eq_rec(rec r1, rec r2)
+{
+  return r1.x == r2.x && r1.y == r2.y && r1.width == r2.width && r1.height == r2.height;
 }
 // END ZMATH
 
