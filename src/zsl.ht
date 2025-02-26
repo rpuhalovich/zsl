@@ -248,6 +248,7 @@ void getSlice(String* str, StringView* res, u32 start, u32 end);
 
 #define newStringcs(arena, str) newStringc(arena, str, strlen(str))
 #define ns(arena, str) newStringc(arena, str, strlen(str))
+#define String(str) (String){.chars = str, .length = strlen(str)}
 // END ZSTRING
 
 #ifdef ZSL_IMPLEMENTATION
