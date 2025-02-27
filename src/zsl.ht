@@ -246,9 +246,10 @@ char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
 void getSlice(String* str, StringView* res, u32 start, u32 end);
 
-#define newStringcs(arena, str) newStringc(arena, str, strlen(str))
+#define newString(arena, str) newStringc(arena, str, strlen(str))
 #define ns(arena, str) newStringc(arena, str, strlen(str))
-#define String(str) (String){.chars = str, .length = strlen(str)}
+#define String(str) (String){str, strlen(str)}
+#define s(str) (String){str, strlen(str)}
 // END ZSTRING
 
 #ifdef ZSL_IMPLEMENTATION
