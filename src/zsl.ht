@@ -150,8 +150,8 @@ bool eq_v2i(v2i v1, v2i v2);
 bool eq_rec(rec r1, rec r2);
 bool isPointInRec(rec r, v2f p);
 rec divides_rec(rec r, f32 val);
-rec multiplys_rec(rec r, f32 val);
-v2f multiplys_v2f(v2f v, f32 val);
+rec multiply_rec(rec r, f32 val);
+v2f multiply_v2f(v2f v, f32 val);
 // END ZMATH
 
 // BEGIN ZARENA
@@ -369,7 +369,7 @@ rec divides_rec(rec r, f32 val)
   };
 }
 
-rec multiplys_rec(rec r, f32 val)
+rec multiply_rec(rec r, f32 val)
 {
   return (rec){
     .x = r.x * val,
@@ -379,7 +379,7 @@ rec multiplys_rec(rec r, f32 val)
   };
 }
 
-v2f multiplys_v2f(v2f v, f32 val)
+v2f multiply_v2f(v2f v, f32 val)
 {
   return (v2f) {
     .x = v.x * val,
