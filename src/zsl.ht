@@ -91,11 +91,9 @@ typedef struct {
     #define zlog_error(...)
 #endif
 
-#define FORWARD(s, t)\
-    struct s;\
-    typedef struct s t;
+#define FORWARD(s, t) struct s; typedef struct s t
 
-#define ann(exp) (exp); assert((exp) != NULL);
+#define ann(exp) (exp); assert((exp) != NULL)
 // END ZTYPES
 
 // BEGIN ZMATH
