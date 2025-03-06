@@ -163,10 +163,11 @@ v2f multiply_v2f(v2f v, f32 val);
 // macos memory management: https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/AboutMemory.html
 // Untangling Lifetimes - The Arena Allocator: https://www.rfleury.com/p/untangling-lifetimes-the-arena-allocator
 
-typedef struct {
+typedef struct tArena {
     u8* memory;
     u8* ptr;
     u64 capacity;
+    i32 id; // NOTE: just added for debug reporting
 } Arena;
 
 Arena* newArena(u64 size);
@@ -452,7 +453,10 @@ void freeArena(Arena* a)
 {
     memset(a->memory, 0, a->capacity);
     free(a->memory);
+    a->memory = NULL;
+
     free(a);
+    a = NULL;
 }
 
 void clear(Arena* a)
