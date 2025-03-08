@@ -76,20 +76,14 @@ typedef struct {
     f32 x, y, width, height;
 } rec;
 
-#ifdef ZDEBUG
-    #define STRINGIFY(x) #x
-    #define TOSTRING(x) STRINGIFY(x)
-    #define CONCAT_FILE_LINE(file, line) file ":" TOSTRING(line)
-    #define FILE_LINE CONCAT_FILE_LINE(__FILE__, __LINE__)
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define CONCAT_FILE_LINE(file, line) file ":" TOSTRING(line)
+#define FILE_LINE CONCAT_FILE_LINE(__FILE__, __LINE__)
 
-    #define zlog(...) printf("[INFO] [" FILE_LINE "] " __VA_ARGS__)
-    #define zlog_warn(...) printf("[WARN] [" FILE_LINE "] " __VA_ARGS__)
-    #define zlog_error(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
-#else
-    #define zlog(...)
-    #define zlog_warn(...)
-    #define zlog_error(...)
-#endif
+#define zlog(...) printf("[INFO] [" FILE_LINE "] " __VA_ARGS__)
+#define zlog_warn(...) printf("[WARN] [" FILE_LINE "] " __VA_ARGS__)
+#define zlog_error(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
 
 #define FORWARD(s, t) struct s; typedef struct s t
 
