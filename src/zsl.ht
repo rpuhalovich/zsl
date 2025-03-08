@@ -86,8 +86,6 @@ typedef struct {
 #define zlog_error(...) printf("[ERROR] [" FILE_LINE "] " __VA_ARGS__)
 
 #define FORWARD(s, t) struct s; typedef struct s t
-
-#define ann(exp) (exp); assert((exp) != NULL)
 // END ZTYPES
 
 // BEGIN ZMATH
@@ -236,6 +234,7 @@ typedef struct sString StringView;
 String* newStringc(Arena* arena, char* str, u32 len);
 String* newStrings(Arena* arena, String* str);
 bool eq(String* str1, String* str2);
+bool cmp(String* str1, String* str2);
 String* cat(Arena* arena, String* str1, String* str2);
 char* cstr(Arena* arena, String* str);
 Result_char getChar(String* str, u32 i);
@@ -666,6 +665,13 @@ bool eq(String* str1, String* str2)
 
     bool res = strncmp(str1->chars, str2->chars, s1len);
     return res == 0;
+}
+
+bool cmp(String* str1, String* str2)
+{
+    u32 s1len = str1->length;
+    u32 s2len = str2->length;
+    return strncmp(str1->chars, str2->chars, min_u32(s1len, s2len));
 }
 
 String* cat(Arena* arena, String* str1, String* str2)
