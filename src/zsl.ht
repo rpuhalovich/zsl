@@ -16,7 +16,7 @@ typedef struct sString String;
 #define f32 float
 #define f64 double
 
-#if defined(_MSC_VER) || defined(__SYMBIAN32__)
+#if defined(_MSC_VER) || defined(__SYMBIAN32__) || defined(EMSCRIPTEN)
 #include <errno.h> // NOLINT
 
 typedef unsigned char u8;
@@ -214,7 +214,7 @@ Result_%TYPENP% get_%TYPENP%(Array_%TYPENP%* array, u32 i);
 Error set_%TYPENP%(Array_%TYPENP%* array, u32 i, %TYPE% val);
 Error shrinkLength_%TYPENP%(Array_%TYPENP%* array, u32 i);
 void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element);
-%TYPE% pop_%TYPENP%(Array_%TYPENP%* array);
+void pop_%TYPENP%(Array_%TYPENP%* array);
 %TYPE% popFront_%TYPENP%(Array_%TYPENP%* array);
 void clear_%TYPENP%(Array_%TYPENP%* array);
 void insert_%TYPENP%(Arena* arena, Array_%TYPENP%* array, u32 i, %TYPE% element);
@@ -285,7 +285,7 @@ f32 safeTrunc_i32_f32(i32 value)
 
 i32 safeTrunc_f32_i32(f32 value)
 {
-  assert(INT_MIN <= value && value <= INT_MAX); // probs not necessary
+  // assert(INT_MIN <= value && value <= INT_MAX); // probs not necessary
   return (i32)value;
 }
 // END ZTYPES
@@ -585,11 +585,10 @@ void push_%TYPENP%(Arena* arena, Array_%TYPENP%* array, %TYPE% element)
     array->items[array->length - 1] = element;
 }
 
-%TYPE% pop_%TYPENP%(Array_%TYPENP%* array)
+void pop_%TYPENP%(Array_%TYPENP%* array)
 {
-    %TYPE% res = array->items[array->length - 1];
-    array->length--;
-    return res;
+    if (array->length > 0)
+      array->length--;
 }
 
 %TYPE% popFront_%TYPENP%(Array_%TYPENP%* array)
@@ -676,9 +675,10 @@ bool cmp(String* str1, String* str2)
 
 String* cat(Arena* arena, String* str1, String* str2)
 {
-    char* charString = allocate(arena, str1->length + str2->length);
+    char* charString = allocate(arena, str1->length + str2->length + 1);
     memcpy(charString, str1->chars, str1->length);
     memcpy(charString + str1->length, str2->chars, str2->length);
+    charString[str1->length + str2->length + 1] = '\0';
 
     String* s = allocate(arena, sizeof(String));
     s->chars = charString;
