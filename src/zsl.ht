@@ -444,6 +444,9 @@ void* reallocate(Arena* a, void* ptr, u64 oldsize, u64 newsize)
 
 void freeArena(Arena* a)
 {
+    assert(a != NULL);
+    assert(a->memory != NULL);
+
     memset(a->memory, 0, a->capacity);
     free(a->memory);
     a->memory = NULL;
